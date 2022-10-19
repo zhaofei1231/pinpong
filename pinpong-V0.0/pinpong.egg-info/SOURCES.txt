@@ -1,0 +1,594 @@
+MANIFEST.in
+README.md
+setup.cfg
+setup.py
+pinpong/__init__.py
+pinpong/board.py
+pinpong.egg-info/PKG-INFO
+pinpong.egg-info/SOURCES.txt
+pinpong.egg-info/dependency_links.txt
+pinpong.egg-info/entry_points.txt
+pinpong.egg-info/requires.txt
+pinpong.egg-info/top_level.txt
+pinpong/base/DfuUtil.py
+pinpong/base/EspTool.py
+pinpong/base/__init__.py
+pinpong/base/avrdude.py
+pinpong/base/butterfly.py
+pinpong/base/butterfly_param.py
+pinpong/base/comm.py
+pinpong/base/help.py
+pinpong/base/microbit.py
+pinpong/base/pin_data.py
+pinpong/base/private_constants.py
+pinpong/base/programmer.py
+pinpong/base/pymata4.py
+pinpong/base/stk500.py
+pinpong/base/stk500_param.py
+pinpong/base/stk500v2.py
+pinpong/base/stk500v2_param.py
+pinpong/examples/1-01-blink.py
+pinpong/examples/1-02-button.py
+pinpong/examples/1-03-adc.py
+pinpong/examples/1-04-pwm.py
+pinpong/examples/1-05-irq.py
+pinpong/examples/10-01-ens160.py
+pinpong/examples/11-01-iic_to_serial.py
+pinpong/examples/11-02-windspeed_uart_i2c.py
+pinpong/examples/11-03-winddirection_uart_i2c.py
+pinpong/examples/11-04-mics_get_gas_ppm.py
+pinpong/examples/11-05-mics_get_gas_exist.py
+pinpong/examples/11-06-mics_get_adc_data.py
+pinpong/examples/11-07-mics_enable_power.py
+pinpong/examples/2-01-tone.py
+pinpong/examples/2-02-servo.py
+pinpong/examples/2-03-sr04_urm10.py
+pinpong/examples/2-04-dht.py
+pinpong/examples/2-05-lcd1602.py
+pinpong/examples/2-06-oled12864.py
+pinpong/examples/2-07-neopixel.py
+pinpong/examples/3-01-tcs34725.py
+pinpong/examples/3-02-urm09.py
+pinpong/examples/3-03-rgb1602.py
+pinpong/examples/3-04-mlx90614.py
+pinpong/examples/3-05-i2c.py
+pinpong/examples/3-06-ir_recv.py
+pinpong/examples/3-06-ir_send.py
+pinpong/examples/4-01-ds1307.py
+pinpong/examples/4-02-paj7620u2.py
+pinpong/examples/4-03-bno055.py
+pinpong/examples/4-04-bmp280.py
+pinpong/examples/4-05-nfc_card_info.py
+pinpong/examples/4-06-nfc_read_all_memory.py
+pinpong/examples/4-07-nfc_read_write.py
+pinpong/examples/5-01-ds18b20.py
+pinpong/examples/5-02-audio_analyzer.py
+pinpong/examples/5-03-hx711.py
+pinpong/examples/5-04-tds.py
+pinpong/examples/5-05-heartrate.py
+pinpong/examples/5-06-bme280.py
+pinpong/examples/5-07-vl53l0.py
+pinpong/examples/5-08-lis2dh.py
+pinpong/examples/5-09-bmp388.py
+pinpong/examples/5-10-ina219.py
+pinpong/examples/5-11-ccs811_read_data.py
+pinpong/examples/5-12-ccs811_read_baseline.py
+pinpong/examples/5-13-ads1115_read_voltage.py
+pinpong/examples/5-14-ads1115_comparator_voltage.py
+pinpong/examples/5-15-huskylens_request.py
+pinpong/examples/5-16-huskylens_request_custom_text.py
+pinpong/examples/5-17-huskylens_request_customnames.py
+pinpong/examples/5-18-huskylens_request_forget.py
+pinpong/examples/5-19-huskylens_request_knowledges.py
+pinpong/examples/5-20-huskylens_request_learn_once.py
+pinpong/examples/5-21-huskylens_request_photo_screenshot.py
+pinpong/examples/5-22-huskylens_switch_algorithms.py
+pinpong/examples/5-24-huskylens_mix.py
+pinpong/examples/5-37-lis2dw12.py
+pinpong/examples/6-01-bme680.py
+pinpong/examples/6-02-max17043.py
+pinpong/examples/7-01-mcp4725_output_Sin.py
+pinpong/examples/7-01-mcp4725_output_triangle.py
+pinpong/examples/7-01-mcp4725_output_voltage.py
+pinpong/examples/7-01-mcp4725_output_voltage_eeprom.py
+pinpong/examples/7-02-bmi160_acc.py
+pinpong/examples/7-02-bmi160_step.py
+pinpong/examples/7-03-rgb_panel.py
+pinpong/examples/7-04-ds0469.py
+pinpong/examples/7-05-tm1650.py
+pinpong/examples/7-06-sht31.py
+pinpong/examples/7-07-ozone.py
+pinpong/examples/7-08-id809_fingerprint_deletion.py
+pinpong/examples/7-08-id809_fingerprint_matching.py
+pinpong/examples/7-08-id809_fingerprint_register.py
+pinpong/examples/7-08-id809_get_device_info.py
+pinpong/examples/9-01-dht20.py
+pinpong/examples/__init__.py
+pinpong/examples/adc.py
+pinpong/examples/blink.py
+pinpong/examples/button.py
+pinpong/examples/ili.py
+pinpong/examples/pwm.py
+pinpong/examples/windspeed.py
+pinpong/examples/PinPong Board/__init__.py
+pinpong/examples/PinPong Board/get_ip_port.py
+pinpong/examples/PinPong Board/example/Many_board_control/1-01-blink.py
+pinpong/examples/PinPong Board/example/Many_board_control/__init__.py
+pinpong/examples/PinPong Board/example/serial_example/1-01-blink.py
+pinpong/examples/PinPong Board/example/serial_example/1-02-button.py
+pinpong/examples/PinPong Board/example/serial_example/1-03-adc.py
+pinpong/examples/PinPong Board/example/serial_example/1-04-pwm.py
+pinpong/examples/PinPong Board/example/serial_example/1-05-irq.py
+pinpong/examples/PinPong Board/example/serial_example/1-06-tone.py
+pinpong/examples/PinPong Board/example/serial_example/1-07-servo.py
+pinpong/examples/PinPong Board/example/serial_example/1-08-sr04_urm10.py
+pinpong/examples/PinPong Board/example/serial_example/1-09-dht.py
+pinpong/examples/PinPong Board/example/serial_example/1-10-lcd1602.py
+pinpong/examples/PinPong Board/example/serial_example/1-11-oled12864.py
+pinpong/examples/PinPong Board/example/serial_example/1-12-neopixel.py
+pinpong/examples/PinPong Board/example/serial_example/1-13-tcs34725.py
+pinpong/examples/PinPong Board/example/serial_example/1-14-urm09.py
+pinpong/examples/PinPong Board/example/serial_example/1-15-rgb1602.py
+pinpong/examples/PinPong Board/example/serial_example/1-16-mlx90614.py
+pinpong/examples/PinPong Board/example/serial_example/1-17-i2c.py
+pinpong/examples/PinPong Board/example/serial_example/1-18-ir_recv.py
+pinpong/examples/PinPong Board/example/serial_example/1-18-ir_send.py
+pinpong/examples/PinPong Board/example/serial_example/1-19-ds1307.py
+pinpong/examples/PinPong Board/example/serial_example/1-20-paj7620u2.py
+pinpong/examples/PinPong Board/example/serial_example/1-21-bno055.py
+pinpong/examples/PinPong Board/example/serial_example/1-22-bmp280.py
+pinpong/examples/PinPong Board/example/serial_example/1-24-tds.py
+pinpong/examples/PinPong Board/example/serial_example/1-25-heartrate.py
+pinpong/examples/PinPong Board/example/serial_example/1-26-bme280.py
+pinpong/examples/PinPong Board/example/serial_example/1-27-vl53l0.py
+pinpong/examples/PinPong Board/example/serial_example/1-28-lis2dh.py
+pinpong/examples/PinPong Board/example/serial_example/1-29-bmp388.py
+pinpong/examples/PinPong Board/example/serial_example/1-30-ina219.py
+pinpong/examples/PinPong Board/example/serial_example/1-31-ccs811_read_baseline.py
+pinpong/examples/PinPong Board/example/serial_example/1-31-ccs811_read_data.py
+pinpong/examples/PinPong Board/example/serial_example/1-32-ads1115_comparator_voltage.py
+pinpong/examples/PinPong Board/example/serial_example/1-32-ads1115_read_voltage.py
+pinpong/examples/PinPong Board/example/serial_example/1-33-huskylens_mix.py
+pinpong/examples/PinPong Board/example/serial_example/1-33-huskylens_request.py
+pinpong/examples/PinPong Board/example/serial_example/1-33-huskylens_request_custom_text.py
+pinpong/examples/PinPong Board/example/serial_example/1-33-huskylens_request_customnames.py
+pinpong/examples/PinPong Board/example/serial_example/1-33-huskylens_request_forget.py
+pinpong/examples/PinPong Board/example/serial_example/1-33-huskylens_request_knowledges.py
+pinpong/examples/PinPong Board/example/serial_example/1-33-huskylens_request_learn_once.py
+pinpong/examples/PinPong Board/example/serial_example/1-33-huskylens_request_photo_screenshot.py
+pinpong/examples/PinPong Board/example/serial_example/1-33-huskylens_switch_algorithms.py
+pinpong/examples/PinPong Board/example/serial_example/1-34-nfc_card_info.py
+pinpong/examples/PinPong Board/example/serial_example/1-34-nfc_read_all_memory.py
+pinpong/examples/PinPong Board/example/serial_example/1-34-nfc_read_write.py
+pinpong/examples/PinPong Board/example/serial_example/1-35-aht20.py
+pinpong/examples/PinPong Board/example/serial_example/1-36-mpu6050.py
+pinpong/examples/PinPong Board/example/serial_example/1-37-motor.py
+pinpong/examples/PinPong Board/example/serial_example/1-38-bme680.py
+pinpong/examples/PinPong Board/example/serial_example/1-39-max17043.py
+pinpong/examples/PinPong Board/example/serial_example/1-40-mcp4725_output_Sin.py
+pinpong/examples/PinPong Board/example/serial_example/1-40-mcp4725_output_triangle.py
+pinpong/examples/PinPong Board/example/serial_example/1-40-mcp4725_output_voltage.py
+pinpong/examples/PinPong Board/example/serial_example/1-40-mcp4725_output_voltage_EEPROM.py
+pinpong/examples/PinPong Board/example/serial_example/1-41-bmi160_acc.py
+pinpong/examples/PinPong Board/example/serial_example/1-41-bmi160_step.py
+pinpong/examples/PinPong Board/example/serial_example/1-42-RGBpanel.py
+pinpong/examples/PinPong Board/example/serial_example/1-43-DS0469.py
+pinpong/examples/PinPong Board/example/serial_example/1-44-TM1650.py
+pinpong/examples/PinPong Board/example/serial_example/1-45-SHT31.py
+pinpong/examples/PinPong Board/example/serial_example/1-46-ozone.py
+pinpong/examples/PinPong Board/example/serial_example/1-47-ID809_fingerprint_deletion.py
+pinpong/examples/PinPong Board/example/serial_example/1-47-ID809_fingerprint_matching.py
+pinpong/examples/PinPong Board/example/serial_example/1-47-ID809_fingerprint_register.py
+pinpong/examples/PinPong Board/example/serial_example/1-47-ID809_get_device_info.py
+pinpong/examples/PinPong Board/example/serial_example/__init__.py
+pinpong/examples/PinPong Board/example/serial_example/adc.py
+pinpong/examples/PinPong Board/example/serial_example/blink.py
+pinpong/examples/PinPong Board/example/serial_example/button.py
+pinpong/examples/PinPong Board/example/serial_example/pwm.py
+pinpong/examples/PinPong Board/example/tcp_example/1-01-blink.py
+pinpong/examples/PinPong Board/example/tcp_example/1-02-button.py
+pinpong/examples/PinPong Board/example/tcp_example/1-03-adc.py
+pinpong/examples/PinPong Board/example/tcp_example/1-04-pwm.py
+pinpong/examples/PinPong Board/example/tcp_example/1-05-irq.py
+pinpong/examples/PinPong Board/example/tcp_example/1-06-tone.py
+pinpong/examples/PinPong Board/example/tcp_example/1-07-servo.py
+pinpong/examples/PinPong Board/example/tcp_example/1-08-sr04_urm10.py
+pinpong/examples/PinPong Board/example/tcp_example/1-09-dht.py
+pinpong/examples/PinPong Board/example/tcp_example/1-10-lcd1602.py
+pinpong/examples/PinPong Board/example/tcp_example/1-11-oled12864.py
+pinpong/examples/PinPong Board/example/tcp_example/1-12-neopixel.py
+pinpong/examples/PinPong Board/example/tcp_example/1-13-tcs34725.py
+pinpong/examples/PinPong Board/example/tcp_example/1-14-urm09.py
+pinpong/examples/PinPong Board/example/tcp_example/1-15-rgb1602.py
+pinpong/examples/PinPong Board/example/tcp_example/1-16-mlx90614.py
+pinpong/examples/PinPong Board/example/tcp_example/1-17-i2c.py
+pinpong/examples/PinPong Board/example/tcp_example/1-18-ir_recv.py
+pinpong/examples/PinPong Board/example/tcp_example/1-18-ir_send.py
+pinpong/examples/PinPong Board/example/tcp_example/1-19-ds1307.py
+pinpong/examples/PinPong Board/example/tcp_example/1-20-paj7620u2.py
+pinpong/examples/PinPong Board/example/tcp_example/1-21-bno055.py
+pinpong/examples/PinPong Board/example/tcp_example/1-22-bmp280.py
+pinpong/examples/PinPong Board/example/tcp_example/1-24-tds.py
+pinpong/examples/PinPong Board/example/tcp_example/1-25-heartrate.py
+pinpong/examples/PinPong Board/example/tcp_example/1-26-bme280.py
+pinpong/examples/PinPong Board/example/tcp_example/1-27-vl53l0.py
+pinpong/examples/PinPong Board/example/tcp_example/1-28-lis2dh.py
+pinpong/examples/PinPong Board/example/tcp_example/1-29-bmp388.py
+pinpong/examples/PinPong Board/example/tcp_example/1-30-ina219.py
+pinpong/examples/PinPong Board/example/tcp_example/1-31-ccs811_read_baseline.py
+pinpong/examples/PinPong Board/example/tcp_example/1-31-ccs811_read_data.py
+pinpong/examples/PinPong Board/example/tcp_example/1-32-ads1115_comparator_voltage.py
+pinpong/examples/PinPong Board/example/tcp_example/1-32-ads1115_read_voltage.py
+pinpong/examples/PinPong Board/example/tcp_example/1-33-huskylens_mix.py
+pinpong/examples/PinPong Board/example/tcp_example/1-33-huskylens_request.py
+pinpong/examples/PinPong Board/example/tcp_example/1-33-huskylens_request_custom_text.py
+pinpong/examples/PinPong Board/example/tcp_example/1-33-huskylens_request_customnames.py
+pinpong/examples/PinPong Board/example/tcp_example/1-33-huskylens_request_knowledges.py
+pinpong/examples/PinPong Board/example/tcp_example/1-33-huskylens_request_learn_once.py
+pinpong/examples/PinPong Board/example/tcp_example/1-33-huskylens_request_photo_screenshot.py
+pinpong/examples/PinPong Board/example/tcp_example/1-33-huskylens_switch_algorithms.py
+pinpong/examples/PinPong Board/example/tcp_example/1-34-nfc_card_info.py
+pinpong/examples/PinPong Board/example/tcp_example/1-34-nfc_read_all_memory.py
+pinpong/examples/PinPong Board/example/tcp_example/1-34-nfc_read_write.py
+pinpong/examples/PinPong Board/example/tcp_example/1-35-aht20.py
+pinpong/examples/PinPong Board/example/tcp_example/1-36-mpu6050.py
+pinpong/examples/PinPong Board/example/tcp_example/1-37-motor.py
+pinpong/examples/PinPong Board/example/tcp_example/1-38-bme680.py
+pinpong/examples/PinPong Board/example/tcp_example/1-39-max17043.py
+pinpong/examples/PinPong Board/example/tcp_example/1-40-mcp4725_output_Sin.py
+pinpong/examples/PinPong Board/example/tcp_example/1-40-mcp4725_output_triangle.py
+pinpong/examples/PinPong Board/example/tcp_example/1-40-mcp4725_output_voltage.py
+pinpong/examples/PinPong Board/example/tcp_example/1-40-mcp4725_output_voltage_EEPROM.py
+pinpong/examples/PinPong Board/example/tcp_example/1-41-bmi160_acc.py
+pinpong/examples/PinPong Board/example/tcp_example/1-41-bmi160_step.py
+pinpong/examples/PinPong Board/example/tcp_example/1-42-RGBpanel.py
+pinpong/examples/PinPong Board/example/tcp_example/1-43-DS0469.py
+pinpong/examples/PinPong Board/example/tcp_example/1-44-TM1650.py
+pinpong/examples/PinPong Board/example/tcp_example/1-45-SHT31.py
+pinpong/examples/PinPong Board/example/tcp_example/1-46-ozone.py
+pinpong/examples/PinPong Board/example/tcp_example/1-47-ID809_fingerprint_deletion.py
+pinpong/examples/PinPong Board/example/tcp_example/1-47-ID809_fingerprint_matching.py
+pinpong/examples/PinPong Board/example/tcp_example/1-47-ID809_fingerprint_register.py
+pinpong/examples/PinPong Board/example/tcp_example/1-47-ID809_get_device_info.py
+pinpong/examples/PinPong Board/example/tcp_example/__init__.py
+pinpong/examples/PinPong Board/example/tcp_example/adc.py
+pinpong/examples/PinPong Board/example/tcp_example/blink.py
+pinpong/examples/PinPong Board/example/tcp_example/button.py
+pinpong/examples/PinPong Board/example/tcp_example/pwm.py
+pinpong/examples/RPi/1-01-blink.py
+pinpong/examples/RPi/1-02-button.py
+pinpong/examples/RPi/1-03-adc.py
+pinpong/examples/RPi/1-04-pwm.py
+pinpong/examples/RPi/1-05-irq.py
+pinpong/examples/RPi/16_channels_PWM_control.py
+pinpong/examples/RPi/2-01-tone.py
+pinpong/examples/RPi/2-02-servo.py
+pinpong/examples/RPi/2-03-sr04_urm10.py
+pinpong/examples/RPi/2-04-dht.py
+pinpong/examples/RPi/2-05-lcd1602.py
+pinpong/examples/RPi/2-06-oled12864.py
+pinpong/examples/RPi/2-07-neopixel.py
+pinpong/examples/RPi/3-01-tcs34725.py
+pinpong/examples/RPi/3-02-urm09.py
+pinpong/examples/RPi/3-03-rgb1602.py
+pinpong/examples/RPi/3-04-mlx90614.py
+pinpong/examples/RPi/8-01-urm37.py
+pinpong/examples/RPi/9-01-as7341.py
+pinpong/examples/RPi/9-01-st7789-as7341.py
+pinpong/examples/RPi/9-01-st7789-pic.py
+pinpong/examples/RPi/9-01-st7789.py
+pinpong/examples/RPi/__init__.py
+pinpong/examples/RPi/adc.py
+pinpong/examples/RPi/as7341.py
+pinpong/examples/RPi/dri0050.py
+pinpong/examples/RPi/ili9341.py
+pinpong/examples/RPi/sen0482.py
+pinpong/examples/RPi/sen0483.py
+pinpong/examples/RPi/sen0492.py
+pinpong/examples/UNIHIKER/Sensor.py
+pinpong/examples/UNIHIKER/__init__.py
+pinpong/examples/UNIHIKER/adc.py
+pinpong/examples/UNIHIKER/blink.py
+pinpong/examples/UNIHIKER/button.py
+pinpong/examples/UNIHIKER/buzzer.py
+pinpong/examples/UNIHIKER/dht.py
+pinpong/examples/UNIHIKER/dht20.py
+pinpong/examples/UNIHIKER/ds18b20.py
+pinpong/examples/UNIHIKER/ens160.py
+pinpong/examples/UNIHIKER/gp2y1010au0f.py
+pinpong/examples/UNIHIKER/i2c.py
+pinpong/examples/UNIHIKER/iic_to_serial.py
+pinpong/examples/UNIHIKER/ir_recv.py
+pinpong/examples/UNIHIKER/ir_send.py
+pinpong/examples/UNIHIKER/mics_enable_power.py
+pinpong/examples/UNIHIKER/mics_get_adc_data.py
+pinpong/examples/UNIHIKER/mics_get_gas_exist.py
+pinpong/examples/UNIHIKER/mics_get_gas_ppm.py
+pinpong/examples/UNIHIKER/mlx90614.py
+pinpong/examples/UNIHIKER/mp3.py
+pinpong/examples/UNIHIKER/neopixel.py
+pinpong/examples/UNIHIKER/pwm.py
+pinpong/examples/UNIHIKER/servo.py
+pinpong/examples/UNIHIKER/spi.py
+pinpong/examples/UNIHIKER/sr04_urm10.py
+pinpong/examples/UNIHIKER/tone.py
+pinpong/examples/UNIHIKER/uart.py
+pinpong/examples/UNIHIKER/urm09.py
+pinpong/examples/UNIHIKER/winddirection.py
+pinpong/examples/UNIHIKER/winddirection_uart_i2c.py
+pinpong/examples/UNIHIKER/windspeed.py
+pinpong/examples/UNIHIKER/windspeed_uart_i2c.py
+pinpong/examples/handpy/Sensor.py
+pinpong/examples/handpy/__init__.py
+pinpong/examples/handpy/adc.py
+pinpong/examples/handpy/adc1.py
+pinpong/examples/handpy/blink.py
+pinpong/examples/handpy/blink1.py
+pinpong/examples/handpy/button.py
+pinpong/examples/handpy/button1.py
+pinpong/examples/handpy/ccs811_read_baseline.py
+pinpong/examples/handpy/ccs811_read_data.py
+pinpong/examples/handpy/dht.py
+pinpong/examples/handpy/ds18b20.py
+pinpong/examples/handpy/ir_recv.py
+pinpong/examples/handpy/irq.py
+pinpong/examples/handpy/lcd1602.py
+pinpong/examples/handpy/led_control.py
+pinpong/examples/handpy/motorbit_motor.py
+pinpong/examples/handpy/motorbit_servo.py
+pinpong/examples/handpy/motorbit_stepper.py
+pinpong/examples/handpy/music.py
+pinpong/examples/handpy/neopixel.py
+pinpong/examples/handpy/nfc_card_info.py
+pinpong/examples/handpy/nfc_read_all_memory.py
+pinpong/examples/handpy/nfc_read_write.py
+pinpong/examples/handpy/obloq_http.py
+pinpong/examples/handpy/obloq_mqttPublish.py
+pinpong/examples/handpy/obloq_mqttSubcribe.py
+pinpong/examples/handpy/oled12864.py
+pinpong/examples/handpy/pwm.py
+pinpong/examples/handpy/pwm1.py
+pinpong/examples/handpy/screen_display.py
+pinpong/examples/handpy/servo.py
+pinpong/examples/handpy/sr04_urm10.py
+pinpong/examples/handpy/tone.py
+pinpong/examples/handpy/urm09.py
+pinpong/examples/microbit/Sensor.py
+pinpong/examples/microbit/__init__.py
+pinpong/examples/microbit/adc.py
+pinpong/examples/microbit/adc1.py
+pinpong/examples/microbit/blink.py
+pinpong/examples/microbit/blink1.py
+pinpong/examples/microbit/button.py
+pinpong/examples/microbit/button1.py
+pinpong/examples/microbit/ccs811_read_baseline.py
+pinpong/examples/microbit/ccs811_read_data.py
+pinpong/examples/microbit/dht.py
+pinpong/examples/microbit/ds18b20.py
+pinpong/examples/microbit/ir_recv.py
+pinpong/examples/microbit/irq.py
+pinpong/examples/microbit/lcd1602.py
+pinpong/examples/microbit/motorbit_motor.py
+pinpong/examples/microbit/motorbit_servo.py
+pinpong/examples/microbit/motorbit_stepper.py
+pinpong/examples/microbit/music.py
+pinpong/examples/microbit/neopixel.py
+pinpong/examples/microbit/nfc_card_info.py
+pinpong/examples/microbit/nfc_read_all_memory.py
+pinpong/examples/microbit/nfc_read_write.py
+pinpong/examples/microbit/obloq_http.py
+pinpong/examples/microbit/obloq_mqttPublish.py
+pinpong/examples/microbit/obloq_mqttSubcribe.py
+pinpong/examples/microbit/oled12864.py
+pinpong/examples/microbit/pwm.py
+pinpong/examples/microbit/pwm1.py
+pinpong/examples/microbit/screen.py
+pinpong/examples/microbit/servo.py
+pinpong/examples/microbit/sr04_urm10.py
+pinpong/examples/microbit/tone.py
+pinpong/examples/microbit/urm09.py
+pinpong/examples/microbit/wireless_recv.py
+pinpong/examples/microbit/wireless_send.py
+pinpong/examples/nezha/1-01-blink.py
+pinpong/examples/nezha/1-02-button.py
+pinpong/examples/nezha/1-04-pwm.py
+pinpong/examples/nezha/1-06-iic-scan.py
+pinpong/examples/nezha/1-29-bmp388.py
+pinpong/examples/nezha/2-02-servo.py
+pinpong/examples/nezha/2-06-oled12864.py
+pinpong/examples/nezha/3-01-tcs34725.py
+pinpong/examples/nezha/3-02-urm09.py
+pinpong/examples/nezha/3-03-rgb1602.py
+pinpong/examples/nezha/3-04-mlx90614.py
+pinpong/examples/nezha/3-06-ir_recv.py
+pinpong/examples/nezha/3-07-veml6075_get_uv.py
+pinpong/examples/nezha/4-05-nfc_card_info.py
+pinpong/examples/nezha/4-06-nfc_read_all_memory.py
+pinpong/examples/nezha/4-07-nfc_read_write.py
+pinpong/examples/nezha/4-10-sht31.py
+pinpong/examples/nezha/4-11-veml7700.py
+pinpong/examples/nezha/4-12-sgp40-voc.py
+pinpong/examples/nezha/4-13-bmm150.py
+pinpong/examples/nezha/5-09-bmp388.py
+pinpong/examples/nezha/5-15-huskylens_request.py
+pinpong/examples/nezha/5-16-huskylens_request_custom_text.py
+pinpong/examples/nezha/5-17-huskylens_request_customnames.py
+pinpong/examples/nezha/5-18-huskylens_request_forget.py
+pinpong/examples/nezha/5-19-huskylens_request_knowledges.py
+pinpong/examples/nezha/5-20-huskylens_request_learn_once.py
+pinpong/examples/nezha/5-21-huskylens_request_photo_screenshot.py
+pinpong/examples/nezha/5-22-huskylens_switch_algorithms.py
+pinpong/examples/nezha/5-23-huskylens_request_knock.py
+pinpong/examples/nezha/5-24-huskylens_mix.py
+pinpong/examples/nezha/5-30-lis331hh.py
+pinpong/examples/nezha/5-37-lis2dw12.py
+pinpong/examples/nezha/7-02-bmi160_acc.py
+pinpong/examples/nezha/7-02-bmi160_step.py
+pinpong/examples/nezha/7-03-st7789.py
+pinpong/examples/nezha/__init__.py
+pinpong/examples/nezha/dri0050.py
+pinpong/examples/win/Kamoer_4460.py
+pinpong/examples/xugu/1-01-blink.py
+pinpong/examples/xugu/1-02-button.py
+pinpong/examples/xugu/1-03-adc.py
+pinpong/examples/xugu/1-04-pwm.py
+pinpong/examples/xugu/1-05-irq.py
+pinpong/examples/xugu/2-01-tone.py
+pinpong/examples/xugu/2-02-servo.py
+pinpong/examples/xugu/2-03-sr04_urm10.py
+pinpong/examples/xugu/2-04-dht.py
+pinpong/examples/xugu/2-05-lcd1602.py
+pinpong/examples/xugu/2-06-oled12864.py
+pinpong/examples/xugu/2-07-neopixel.py
+pinpong/examples/xugu/3-01-tcs34725.py
+pinpong/examples/xugu/3-02-urm09.py
+pinpong/examples/xugu/3-03-rgb1602.py
+pinpong/examples/xugu/3-04-mlx90614.py
+pinpong/examples/xugu/3-05-i2c.py
+pinpong/examples/xugu/3-06-ir.py
+pinpong/examples/xugu/4-01-ds1307.py
+pinpong/examples/xugu/4-02-paj7620u2.py
+pinpong/examples/xugu/4-03-bno055.py
+pinpong/examples/xugu/4-04-bmp280.py
+pinpong/examples/xugu/4-05-nfc_card_info.py
+pinpong/examples/xugu/4-06-nfc_read_all_memory.py
+pinpong/examples/xugu/4-07-nfc_read_write.py
+pinpong/examples/xugu/5-01-ds18b20.py
+pinpong/examples/xugu/5-02-audio_analyzer.py
+pinpong/examples/xugu/5-03-hx711.py
+pinpong/examples/xugu/5-04-tds.py
+pinpong/examples/xugu/5-05-heartrate.py
+pinpong/examples/xugu/5-06-bme280.py
+pinpong/examples/xugu/5-07-vl53l0.py
+pinpong/examples/xugu/5-08-lis2dh.py
+pinpong/examples/xugu/5-09-bmp388.py
+pinpong/examples/xugu/5-10-ina219.py
+pinpong/examples/xugu/5-11-ccs811_read_data.py
+pinpong/examples/xugu/5-12-ccs811_read_baseline.py
+pinpong/examples/xugu/5-13-ads1115_read_voltage.py
+pinpong/examples/xugu/5-14-ads1115_comparator_voltage.py
+pinpong/examples/xugu/5-15-huskylens_request.py
+pinpong/examples/xugu/5-16-huskylens_request_custom_text.py
+pinpong/examples/xugu/5-17-huskylens_request_customnames.py
+pinpong/examples/xugu/5-18-huskylens_request_forget.py
+pinpong/examples/xugu/5-19-huskylens_request_knowledges.py
+pinpong/examples/xugu/5-20-huskylens_request_learn_once.py
+pinpong/examples/xugu/5-21-huskylens_request_photo_screenshot.py
+pinpong/examples/xugu/5-22-huskylens_switch_algorithms.py
+pinpong/examples/xugu/5-24-huskylens_mix.py
+pinpong/examples/xugu/6-01-bme680.py
+pinpong/examples/xugu/6-02-max17043.py
+pinpong/examples/xugu/7-01-mcp4725_output_Sin.py
+pinpong/examples/xugu/7-01-mcp4725_output_triangle.py
+pinpong/examples/xugu/7-01-mcp4725_output_voltage.py
+pinpong/examples/xugu/7-01-mcp4725_output_voltage_eeprom.py
+pinpong/examples/xugu/7-02-bmi160_acc.py
+pinpong/examples/xugu/7-02-bmi160_step.py
+pinpong/examples/xugu/7-03-rgb_panel.py
+pinpong/examples/xugu/7-04-ds0469.py
+pinpong/examples/xugu/7-05-tm1650.py
+pinpong/examples/xugu/7-06-sht31.py
+pinpong/examples/xugu/7-07-ozone.py
+pinpong/examples/xugu/7-08-id809_fingerprint_deletion.py
+pinpong/examples/xugu/7-08-id809_fingerprint_matching.py
+pinpong/examples/xugu/7-08-id809_fingerprint_register.py
+pinpong/examples/xugu/7-08-id809_get_device_info.py
+pinpong/examples/xugu/__init__.py
+pinpong/examples/xugu/adc.py
+pinpong/examples/xugu/blink.py
+pinpong/examples/xugu/button.py
+pinpong/examples/xugu/pwm.py
+pinpong/extension/__init__.py
+pinpong/extension/globalvar.py
+pinpong/extension/handpy.py
+pinpong/extension/microbit.py
+pinpong/extension/unihiker.py
+pinpong/libs/TLC_10bit_adc.py
+pinpong/libs/__init__.py
+pinpong/libs/dfrobot_ads1115.py
+pinpong/libs/dfrobot_aht20.py
+pinpong/libs/dfrobot_as7341.py
+pinpong/libs/dfrobot_audio_analyzer.py
+pinpong/libs/dfrobot_bme280.py
+pinpong/libs/dfrobot_bme680.py
+pinpong/libs/dfrobot_bmi160.py
+pinpong/libs/dfrobot_bmm150.py
+pinpong/libs/dfrobot_bmp280.py
+pinpong/libs/dfrobot_bmp388.py
+pinpong/libs/dfrobot_bmp3xx.py
+pinpong/libs/dfrobot_bno055.py
+pinpong/libs/dfrobot_ccs811.py
+pinpong/libs/dfrobot_dht20.py
+pinpong/libs/dfrobot_dri0050.py
+pinpong/libs/dfrobot_ds0469.py
+pinpong/libs/dfrobot_ds1307.py
+pinpong/libs/dfrobot_ens160.py
+pinpong/libs/dfrobot_heartrate.py
+pinpong/libs/dfrobot_huskylens.py
+pinpong/libs/dfrobot_hx711.py
+pinpong/libs/dfrobot_id809.py
+pinpong/libs/dfrobot_ili9341.py
+pinpong/libs/dfrobot_ina219.py
+pinpong/libs/dfrobot_lis.py
+pinpong/libs/dfrobot_lis2dh.py
+pinpong/libs/dfrobot_lis2dw12.py
+pinpong/libs/dfrobot_max17043.py
+pinpong/libs/dfrobot_mcp4725.py
+pinpong/libs/dfrobot_mics.py
+pinpong/libs/dfrobot_mlx90614.py
+pinpong/libs/dfrobot_motor.py
+pinpong/libs/dfrobot_mp3.py
+pinpong/libs/dfrobot_mpu6050.py
+pinpong/libs/dfrobot_obloq.py
+pinpong/libs/dfrobot_ozone.py
+pinpong/libs/dfrobot_paj7620u2.py
+pinpong/libs/dfrobot_ph.py
+pinpong/libs/dfrobot_pn532.py
+pinpong/libs/dfrobot_rgb1602.py
+pinpong/libs/dfrobot_rgb_panel.py
+pinpong/libs/dfrobot_sen0482.py
+pinpong/libs/dfrobot_sen0483.py
+pinpong/libs/dfrobot_sen0492.py
+pinpong/libs/dfrobot_sgp40.py
+pinpong/libs/dfrobot_sht31.py
+pinpong/libs/dfrobot_sht3x.py
+pinpong/libs/dfrobot_shtc3.py
+pinpong/libs/dfrobot_ssd1306.py
+pinpong/libs/dfrobot_st7789.py
+pinpong/libs/dfrobot_tcs34725.py
+pinpong/libs/dfrobot_tds.py
+pinpong/libs/dfrobot_tm1650.py
+pinpong/libs/dfrobot_uarttoi2c.py
+pinpong/libs/dfrobot_ui.py
+pinpong/libs/dfrobot_urm09.py
+pinpong/libs/dfrobot_urm12.py
+pinpong/libs/dfrobot_urm37.py
+pinpong/libs/dfrobot_veml6075.py
+pinpong/libs/dfrobot_veml7700.py
+pinpong/libs/dfrobot_vl53l0.py
+pinpong/libs/dfrobot_wind_direction.py
+pinpong/libs/dfrobot_wind_speed.py
+pinpong/libs/dfrobot_zz_io404d.py
+pinpong/libs/framebuf.py
+pinpong/libs/kamoer_4460.py
+pinpong/libs/lcd1602.py
+pinpong/libs/microbit_motor.py
+pinpong/libs/pca_9685.py
+pinpong/libs/rs485winddirection_rs485touart_uarttoi2c.py
+pinpong/libs/rs485windspeed_rs485touart_uarttoi2c.py
+pinpong/libs/xy_md02.py
+pinpong/base/FirmataExpress.HANDPY.2.6.bin
+pinpong/base/FirmataExpress.HANDPY.2.7.bin
+pinpong/base/FirmataExpress.LEONARDO.2.7.hex
+pinpong/base/FirmataExpress.MEGA2560.2.7.hex
+pinpong/base/FirmataExpress.MICROBIT.2.7.hex
+pinpong/base/FirmataExpress.MICROBITV2.2.7.hex
+pinpong/base/FirmataExpress.UNIHIKER.3.3.bin
+pinpong/base/FirmataExpress.UNO.2.7.hex
+pinpong/base/FirmataExpress.UNO_PB.2.7.hex
+pinpong/base/avrdude.conf
+pinpong/base/boot_app0.bin
+pinpong/base/bootloader_dio_80m.bin
+pinpong/base/dfrobot.ino.partitions.bin
+pinpong/base/msyh.ttf
+pinpong/libs/libs.json

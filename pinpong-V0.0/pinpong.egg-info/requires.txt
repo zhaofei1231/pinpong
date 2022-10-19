@@ -1,0 +1,4 @@
+pyserial
+Pillow
+freetype-py==2.1.0
+modbus-tk==1.1.2
