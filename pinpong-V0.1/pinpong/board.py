@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys, getopt #参数简析
+import sys, getopt
 import json
 import time
 import ctypes
@@ -9,15 +9,19 @@ import serial
 import signal
 import platform
 import serial.tools.list_ports
-import subprocess  #子进程
+import subprocess
 import threading
 
-from pinpong.base.avrdude import *  #烧录
+from pinpong.base.avrdude import *
 from pinpong.base import pymata4
-from pinpong.base.comm import *  #公共变量
+from pinpong.base.comm import *
+
 from pinpong.extension.globalvar import *
 
-try: #Window没有smbus
+from pinpong.extension.globalvar import *
+
+
+try:
   import smbus
 except Exception:
   pass
@@ -27,7 +31,7 @@ try:
 except Exception:
   pass
 
-try: #没必要
+try:
   import modbus_tk
   from modbus_tk import modbus_tcp
   from modbus_tk import modbus_rtu
@@ -42,10 +46,16 @@ except Exception:
 
 gboard = None
 gthreads = []
+globalvar_init()
+
+
+import pinpong.extension.uno
+import pinpong.extension.leonardo
+
 
 def get_pin(board,vpin):
   if board.boardname in ["UNO", "LEONARDO", "MEGA2560"]:
-    dpin = vpin if vpin<20 else (vpin-100+14) if vpin >= 100 else -1
+    dpin = vpin if vpin<20 else （    (vpin-100+14) if vpin >= 100 else -1）  #*****dpin 和 apin表示啥？******
     apin = vpin-100 if vpin >= 100 else -1
   else:
     dpin=apin=vpin
@@ -71,18 +81,18 @@ class DuinoPin:
 
   def value(self, v = None):
     if v == None:  #Read
-      if self.mode == Pin.OUT:
-        return self.val     
+      if self.mode == Pin.OUT:   #*****添加错误信息？*****
+        return self.val
       else:
-        if self.pin == None:  #合并return ？
+        if self.pin == None:   #*****添加错误信息？*****
           return
-        self.val = self.board.board.digital_read(self.pin)
+        self.val = self.board.board.digital_read(self.pin) 
         return self.val
     else:  #Write
       self.val = v
-      if(self.pin == None):   #为什么不判断模式？
+      if(self.pin == None):
         return
-      self.board.board.digital_pin_write(self.pin, v)  #加返回值判断正误？
+      self.board.board.digital_pin_write(self.pin, v) 
       time.sleep(0.001)
 
   def on(self):
@@ -99,7 +109,7 @@ class DuinoPin:
 
   def irq(self, trigger, handler):
     self.board.board.set_pin_mode_digital_input(self.pin, None)
-    self.board.board.set_digital_pin_params(self.pin, trigger, handler)
+    self.board.board.set_digital_pin_params(self.pin, trigger, handler) 
   
   #这5个函数将打破原有的面向对象规则，请慎用
   #建议使用value方法 PWM和ADC类来替代这5个函数 
@@ -138,7 +148,7 @@ class RPiPin:
   def __init__(self, board=None, pin=None, mode=None):
     self.board = board
     if(pin == None):
-      self.pin = None  
+      self.pin = None
       return
 
     self.pin = pin
@@ -214,7 +224,9 @@ class SYSFSPin:
     if(pin == None):
       self.pin = None
       return
-    
+                                          
+                                          
+                                          #***
     self.pin = pin
     self.mode = mode
     self.export_path = '/sys/class/gpio/export'
@@ -410,7 +422,7 @@ class Pin:
 
   def __init__(self, board=None, pin=None, mode=None):
     if isinstance(board, int):#兼容面向过程的4个api
-      mode = pin
+      mode = pin                  #***pin为什么传给mode
       pin = board
       board = gboard
 
@@ -419,9 +431,9 @@ class Pin:
 
     self.board = board
     if(pin == None):
-      self.pin = None   #直接return ?
+      self.pin = None
       return
-    self.pin,self.apin = get_pin(self.board, pin)
+    #self.pin,self.apin = get_pin(self.board, pin)
     self.mode = mode
     if self.board.boardname == "RPI":#RPi
       self.obj = RPiPin(board, pin, mode)
@@ -437,7 +449,7 @@ class Pin:
       self.obj = DuinoPin(board, pin,mode)
 
   def value(self, v = None):
-    if v == None:  #Read
+    if v == None:  #Read                      #***直接调用？
       return self.obj.value(v)
     else:  #Write
       self.obj.value(v)
@@ -475,25 +487,28 @@ class Pin:
   def pin_mode(self, mode):
     self.obj.pin_mode(mode)
 
-class DuinoADC:
-  def __init__(self, board=None, pin_obj=None):
-    if isinstance(board, Pin):
-      pin_obj = board
-      board = gboard
-    elif board == None:
-      board = gboard
-    
-    self.board = board
-    self.pin_obj = pin_obj
-    #MICROBIT HANDPY 使用协议 F0 xx(PIN) 02 DF私有Firamata协议
-    #UNO使用标准的Firmata协议
-    if board.boardname in ["HANDPY", "MICROBIT"]:
-      self.board.board.set_pin_analog_input(self.pin_obj.apin, None)
-    else:
-      self.board.board.set_pin_mode_analog_input(self.pin_obj.apin, None)
 
-  def read(self):
-    return self.board.board.analog_read(self.pin_obj.apin)
+
+
+#class DuinoADC:
+#  def __init__(self, board=None, pin_obj=None):
+#    if isinstance(board, Pin):
+#      pin_obj = board
+#      board = gboard
+#    elif board == None:
+#      board = gboard
+#    
+#    self.board = board
+#    self.pin_obj = pin_obj
+#    #MICROBIT HANDPY 使用协议 F0 xx(PIN) 02 DF私有Firamata协议
+#    #UNO使用标准的Firmata协议
+#    if board.boardname in ["HANDPY", "MICROBIT"]:
+#      self.board.board.set_pin_analog_input(self.pin_obj.apin, None)
+#    else:
+#      self.board.board.set_pin_mode_analog_input(self.pin_obj.apin, None)
+#
+#  def read(self):
+#    return self.board.board.analog_read(self.pin_obj.apin)
     
 class ADC:
   def __init__(self, board=None, pin_obj=None):
@@ -505,10 +520,18 @@ class ADC:
     
     self.board = board
     self.pin_obj = pin_obj
-    self.obj = DuinoADC(board, pin_obj)
+    #self.obj = DuinoADC(board, pin_obj)
+    eval(board.res["ADC"])
+    
 
   def read(self):
-    return self.obj.read()
+   # return self.obj.read()
+    return self.board.board.analog_read(self.pin_obj.apin)
+
+
+
+
+
 
 class DuinoPWM:
   def __init__(self, board, pin_obj):
@@ -516,7 +539,7 @@ class DuinoPWM:
     self.pin_obj = pin_obj
     self.freq_value = 100
     self.duty_value = 50
-    self.board.board.set_pin_mode_pwm_output(self.pin_obj.pin)    #.pin在哪？
+    self.board.board.set_pin_mode_pwm_output(self.pin_obj.pin)
 
   def freq(self, v=None):
     if v == None:
@@ -712,30 +735,48 @@ class PWM:
 
     self.board = board
     self.pin_obj = pin_obj
+    
+    board.res["pwm"]["pwminit"](self, pin_obj)
 
-    if self.board.boardname == "RPI":#RPi
-      self.obj = RPiPWM(board, pin_obj)
-    elif self.board.boardname == "NEZHA":#NEZHA
-      self.obj = NeZhaPWM(board, pin_obj)
-    elif self.board.boardname == "JH7100":#JH7100
-      self.obj = JH7100PWM(board, pin_obj)
-    else:
-      self.obj = DuinoPWM(board, pin_obj)
+    #if self.board.boardname == "RPI":#RPi
+    #  self.obj = RPiPWM(board, pin_obj)
+    #elif self.board.boardname == "NEZHA":#NEZHA
+    #  self.obj = NeZhaPWM(board, pin_obj)
+    #elif self.board.boardname == "JH7100":#JH7100
+    #  self.obj = JH7100PWM(board, pin_obj)
+    #else:
+    #  self.obj = DuinoPWM(board, pin_obj)
 
   def freq(self, v=None):
     if v == None:
-      return self.obj.freq(v)
+      return self.freq_value
     else:
-      self.obj.freq(v)
+      self.freq_value = v
+      board.res["pwm"]["pwmfreq"](self)
+  
+  #
+  #  if v == None:
+  #    return self.obj.freq(v)
+  #  else:
+  #    self.obj.freq(v)
 
   def duty(self, v=None):
     if v == None:
-      return self.obj.duty(v)
+      return self.duty_value
     else:
-      self.obj.duty(v)
+      self.duty_value = v
+      board.res["pwm"]["pwmduty"](self)
+      
+      
+   #if v == None:                                       #***有什么区别
+   #  return self.obj.duty(v)
+   #else:
+   #  self.obj.duty(v)
 
   def deinit(self):
-    self.obj.deinit()
+    board.["pwm"]["pwmdeinit"](self)
+  
+ #   self.obj.deinit()
 
 class DuinoSPI:
   def __init__(self, board, device_num, cs, bus_num = 0, baudrate=10000):
@@ -937,7 +978,8 @@ class I2C:
     self.board = board
     if self.board.i2c[bus_num] == None:
       self.bus_num = bus_num
-      if self.board.boardname in ["RPI","NEZHA","JH7100"]:
+      if self.firmata == False:
+      #if self.board.boardname in ["RPI","NEZHA","JH7100"]:
         self.board.i2c[bus_num] = SMBUS(board, bus_num)
       else:
         self.board.i2c[bus_num] = DuinoI2C(board, bus_num)
@@ -1045,9 +1087,9 @@ class UART:
       board = gboard
     elif isinstance(board, int):
       bus_num = board
-      board = gboard
-    elif board == None:
-      board = gboard
+      boardone:
+      board = g = gboard
+    elif board == Nboard
     
     self.board = board
     if self.board.uart[bus_num] == None:
@@ -1056,7 +1098,7 @@ class UART:
         self.board.uart[bus_num] = TTYUART(board, tty_name, baud_rate)
       else:
         self.board.uart[bus_num] = DuinoUART(board, bus_num, baud_rate)
-    self.obj = self.board.uart[bus_num]    #bus_num重复怎么办？
+    self.obj = self.board.uart[bus_num]
 
   def deinit(self):
     self.obj.deinit()
@@ -1237,10 +1279,11 @@ class RPiTone:
   def __init__(self, board, pin_obj):
     self.board = board
     self.pwm = PWM(pin_obj = pin_obj)
-    self.freq_value = 0              
+    self.freq_value = 0
 
   def on(self):
-    self.pwm.freq(self.freq_value)  #默认0
+    self.pwm.freq(self.freq_value)
+
   def off(self):
     self.pwm.freq(0)
 
@@ -1254,7 +1297,7 @@ class RPiTone:
   def tone(self, freq, duration):
 #    self.pwm.play_tone(self.pin_obj.pin, freq, duration) 
      pass
-
+                                                     #*****封装模块库
 class DuinoTone:
   def __init__(self, board, pin_obj):
     self.board = board
@@ -1296,7 +1339,7 @@ class DuinoTone:
           pass
         self.off()
       else:
-        self.board.board.play_tone(self.pin_obj.pin, freq, duration)  #持续时间<0？
+        self.board.board.play_tone(self.pin_obj.pin, freq, duration)
 
 class Tone:
   def __init__(self, board=None, pin_obj=None):
@@ -1445,7 +1488,7 @@ class NeoPixel(object):
     self.pin_obj  = pin_obj
     self.board = board
     self.num = num
-    self.__data = [(0,0,0) for i in range(num)]  #？
+    self.__data = [(0,0,0) for i in range(num)]
     #self.board.board.set_pin_mode_neo(self.pin_obj.pin)
     self.board.board.neopixel_config(self.pin_obj.pin,self.num)
     time.sleep(0.1)
@@ -1715,81 +1758,72 @@ class Board:
   def __init__(self, boardname="", port=None):
     global gboard
     gboard = None
-    globalvar_init()                              #初始化全局变量管理模块
-    wifi_port = 8081
     self.boardname = boardname.upper()
-    self.is_PinPong = False  #是pinpongboard?
-    if self.boardname == "PINPONG BOARD":  #self.is_PinPong = True if self.boardname == "PINPONG BOARD" else False
-        self.is_PinPong = True
     self.port = port
-    self._i2c_init = [False,False,False,False,False] #初始化标记
-    self.i2c = [None, None, None, None, None] #对象列表
-    self.uart = [None, None, None, None, None] #uart对象列表
-    self.modbus = {}
-    self._spi_init = [[False,False], [False,False]]#初始化标记
-    self.spi = [[None, None], [None, None]]
-    self.i2c_fixed = {"RPI":1,"NEZHA":2,"JH7100":1} #某些平台上固定
-    signal.signal(signal.SIGINT, self._exit_handler)
-    self.microbitV1 = False  #板子标记
-    self.microbitV2 = False
-
-    #for i in("microbitV1","microbitV2")
-    for i in board_list: 
-     if match_board(i):
-        self.boardname=i
-        self.extension.init()
-        break;
+    self.connected = False
+    self.timeout = 0
     
-    if platform.platform().find("rockchip") > 0:   #不精确
+    self._i2c_init = [False,False,False,False,False]
+    self.i2c = [None, None, None, None, None]
+    self.uart = [None, None, None, None, None]
+    self.modbus = {}
+    self._spi_init = [[False,False], [False,False]]
+    self.spi = [[None, None], [None, None]]
+
+    signal.signal(signal.SIGINT, self._exit_handler)
+
+    self.res = globalvar_read(self.boardname)
+    if self.res == None:
+      pass ###########
+      return
+
+   
+
+    if platform.platform().find("rockchip") > 0:  ###############如果上面插了一个uno怎么办？
       self.boardname = "UNIHIKER"
 
+    
     if gboard == None:
       gboard = self
-      if self.boardname != "":
-        set_globalvar_value(self.boardname, gboard)
     
-    if port == wifi_port:
-      printlogo_big()
-      self.ip = boardname
-      self.port = port
-      self.boardname = "UNO"
-      self.board = pymata4.Pymata4(ip_address=self.ip, ip_port=self.port)
-      self.board.i2c_write(0x10, [0,0,0])
-      self.board.i2c_write(0x10, [2,0,0])
-
-    name = platform.platform()
-    self.connected = False
-    self.spi_wifi_uno = False 
-    if self.boardname == "RPI":#本地资源
-      GPIO.setmode(GPIO.BCM)
-      GPIO.setwarnings(False)
-      self.connected = True
-    elif self.boardname in ["NEZHA", "JH7100"]:
-      self.connected = True
-    elif self.boardname == "XUGU":
-      self.boardname = "UNO"
-      self.port = "/dev/ttyS1"
-    elif self.boardname == "PINPONG BOARD":
-      self.boardname = "UNO"
-      self.spi_wifi_uno = True
-    elif self.boardname == "WIN":
-      self.connected = True
+    self.res["init"](self, boardname, port)
+    #self.res["begin"]()
+    
+#    if port == wifi_port:
+#      printlogo_big()
+#      self.ip = boardname
+#      self.port = port
+#      self.boardname = "UNO"
+#      self.board = pymata4.Pymata4(ip_address=self.ip, ip_port=self.port)
+#      self.board.i2c_write(0x10, [0,0,0])
+#      self.board.i2c_write(0x10, [2,0,0])
+#
+#    name = platform.platform()
+#    self.connected = False
+#    self.spi_wifi_uno = False
+#    if self.boardname == "RPI":#本地资源
+#      GPIO.setmode(GPIO.BCM)
+#      GPIO.setwarnings(False)
+#      self.connected = True
+#    elif self.boardname in ["NEZHA", "JH7100"]:
+#      self.connected = True
+#    elif self.boardname == "XUGU":
+#      self.boardname = "UNO"
+#      self.port = "/dev/ttyS1"
+#    elif self.boardname == "PINPONG BOARD":
+#      self.boardname = "UNO"
+#      self.spi_wifi_uno = True
+#    elif self.boardname == "WIN":
+#      self.connected = True
   
   def begin(self):
-    printlogo() if self.boardname == 'UNIHIKER' else printlogo_big()
-    version = sys.version.split(' ')[0]
-    plat = platform.platform()
-    if self.spi_wifi_uno:
-      print("[01] Python"+version+" "+plat+" Board: "+ "PinPong Board")
-    else:
-      print("[01] Python"+version+" "+plat+(" " if self.boardname == "" else " Board: "+ self.boardname))
-
-    if self.boardname in ["RPI","NEZHA","JH7100","WIN"]:
-      self.connected = True
+    
+    if self.connected: #Linux or Win SBC
       return self
+  
     major,minor = self.detect_firmata()
     print("[32] Firmata ID: %d.%d"%(major,minor))
-    if (major,minor) != firmware_version[self.boardname]:
+    if (major,minor) != firmware_version[self.boardname]:#burn new firmware
       FIRMATA_MAJOR = firmware_version[self.boardname][0]
       FIRMATA_MINOR = firmware_version[self.boardname][1]
       self.serial.close()
@@ -1797,67 +1831,72 @@ class Board:
       print("[35] Burning firmware...")
       cwdpath,_ = os.path.split(os.path.realpath(__file__))
       pgm = Burner(self.boardname,self.port)
-      if(self.boardname == "UNO"):
-        name = platform.platform()
-        if self.spi_wifi_uno:
-          pgm.burn(cwdpath + "/base/FirmataExpress.UNO_PB."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
-        else:
-          if name.find("Linux_vvBoard_OS")>=0 or name.find("Linux-4.4.159-aarch64-with-Ubuntu-16.04-xenial")>=0:
-            cmd = "/home/scope/software/avrdude-6.3/avrdude -C/home/scope/software/avrdude-6.3/avrdude.conf -v -patmega328p -carduino -P"+self.port+" -b115200 -D -Uflash:w:"+cwdpath + "/base/FirmataExpress.UNO."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex"+":i"
-            os.system(cmd)
-          else:
-            pgm.burn(cwdpath + "/base/FirmataExpress.UNO."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
-      elif(self.boardname == "LEONARDO"):
-#        port_list_0 = list(serial.tools.list_ports.comports())  #leonardo在linux下无法烧录固件 bug wsq
-#        port_list_0 = [list(x) for x in port_list_0]
-#        port_list_0 = [x[0:2] for x in port_list_0]
-        port_list_0 = list(serial.tools.list_ports.comports())
-        port_list_2 = port_list_0 = [list(x) for x in port_list_0]
-        ser = serial.Serial(self.port,1200,timeout=1) #复位
-        ser.close()
-        time.sleep(0.2)
-        retry = 5
-        port = None
-        while retry:
-          retry = retry - 1
-#          port_list_2 = list(serial.tools.list_ports.comports())
-#          port_list_2 = [list(x) for x in port_list_2]
-#          port_list_2 = [x[0:2] for x in port_list_2]
-          port_list_2 = list(serial.tools.list_ports.comports())
-          port_list_2 = [list(x) for x in port_list_2]
-          for p in port_list_2:
-            if p not in port_list_0:
-              port = p
-              break
-          if port == None:
-            time.sleep(0.5)
-          if port: #找到了BootLoader串口
-            break
-        if port == None:
-          print("[99] can NOT find ",self.boardname)
-          sys.exit(0)
-        pgm = Burner(self.boardname, port[0])
-        pgm.burn(cwdpath + "/base/FirmataExpress.LEONARDO."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
-      elif(self.boardname == 'MEGA2560'):
-        pgm.burn(cwdpath + "/base/FirmataExpress.MEGA2560."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
-      elif(self.boardname == 'HANDPY'):
-        pgm.burn(cwdpath + "/base/FirmataExpress.HANDPY."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".bin")
-        time.sleep(1)
-        # ser=serial.Serial(self.port, 115200, timeout=3)
-        # ser.read(ser.in_waiting)
-        # ser.close()
-        # time.sleep(2)
-      elif(self.boardname == 'MICROBIT'):
-        val = self.differ_microbit()
-        if val:
-          pgm.burn(cwdpath + "/base/FirmataExpress.MICROBITV2."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
-        else:
-          pgm.burn(cwdpath + "/base/FirmataExpress.MICROBIT."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
-        time.sleep(2)
-      elif(self.boardname == 'UNIHIKER'):
-        pgm.burn(cwdpath + "/base/FirmataExpress.UNIHIKER."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".bin")
+    self.res["begin"](self)
+      #if(self.boardname == "UNO"):
+      #  name = platform.platform()
+      #  if self.spi_wifi_uno:
+      #    pgm.burn(cwdpath + "/base/FirmataExpress.UNO_PB."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
+      #  else:
+      #    if name.find("Linux_vvBoard_OS")>=0 or name.find("Linux-4.4.159-aarch64-with-Ubuntu-16.04-xenial")>=0:
+      #      cmd = "/home/scope/software/avrdude-6.3/avrdude -C/home/scope/software/avrdude-6.3/avrdude.conf -v -patmega328p -carduino -P"+self.port+" -b115200 -D -Uflash:w:"+cwdpath + "/base/FirmataExpress.UNO."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex"+":i"
+      #      os.system(cmd)
+      #    else:
+      #      pgm.burn(cwdpath + "/base/FirmataExpress.UNO."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
+      #elif(self.boardname == "LEONARDO"):
+#     #   port_list_0 = list(serial.tools.list_ports.comports())  #leonardo在linux下无法烧录固件 bug wsq
+#     #   port_list_0 = [list(x) for x in port_list_0]
+#     #   port_list_0 = [x[0:2] for x in port_list_0]
+      #  port_list_0 = list(serial.tools.list_ports.comports())
+      #  port_list_2 = port_list_0 = [list(x) for x in port_list_0]
+      #  ser = serial.Serial(self.port,1200,timeout=1) #复位
+      #  ser.close()
+      #  time.sleep(0.2)
+      #  retry = 5
+      #  port = None
+      #  while retry:
+      #    retry = retry - 1
+#     #     port_list_2 = list(serial.tools.list_ports.comports())
+#     #     port_list_2 = [list(x) for x in port_list_2]
+#     #     port_list_2 = [x[0:2] for x in port_list_2]
+      #    port_list_2 = list(serial.tools.list_ports.comports())
+      #    port_list_2 = [list(x) for x in port_list_2]
+      #    for p in port_list_2:
+      #      if p not in port_list_0:
+      #        port = p
+      #        break
+      #    if port == None:
+      #      time.sleep(0.5)
+      #    if port: #找到了BootLoader串口
+      #      break
+      #  if port == None:
+      #    print("[99] can NOT find ",self.boardname)
+      #    sys.exit(0)
+      #  pgm = Burner(self.boardname, port[0])
+      #  pgm.burn(cwdpath + "/base/FirmataExpress.LEONARDO."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
+      #elif(self.boardname == 'MEGA2560'):
+      #  pgm.burn(cwdpath + "/base/FirmataExpress.MEGA2560."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
+      #elif(self.boardname == 'HANDPY'):
+      #  pgm.burn(cwdpath + "/base/FirmataExpress.HANDPY."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".bin")
+      #  time.sleep(1)
+      #  # ser=serial.Serial(self.port, 115200, timeout=3)
+      #  # ser.read(ser.in_waiting)
+      #  # ser.close()
+      #  # time.sleep(2)
+      #elif(self.boardname == 'MICROBIT'):
+      #  val = self.differ_microbit()
+      #  if val:
+      #    pgm.burn(cwdpath + "/base/FirmataExpress.MICROBITV2."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
+      #  else:
+      #    pgm.burn(cwdpath + "/base/FirmataExpress.MICROBIT."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".hex")
+      #  time.sleep(2)
+      #elif(self.boardname == 'UNIHIKER'):
+      #  pgm.burn(cwdpath + "/base/FirmataExpress.UNIHIKER."+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+".bin")
+      pgm.burn(cwdpath + self.res["firmware"][0]+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+self.res["firmware"][1])
+      
       print("[37] Burn done")
       self.detect_firmata()
+      
+      
     self.board = pymata4.Pymata4(com_port=self.serial, arduino_wait=2, baud_rate=115200, name = self.boardname)
     
     self.connected = True
@@ -1878,16 +1917,16 @@ class Board:
   ['COM29', 'Silicon Labs CP210x USB to UART Bridge (COM29)', 'USB VID:PID=10C4:EA60 SER=01CEDB2F LOCATION=1-9']
   '''
   def detect_firmata(self):
-    vidpid={
+    self.vidpid={
     "UNO":"2341:0043",
     "LEONARDO":"3343:8036",
-    "LEONARDO":"2341:8036", #bug
+    "LEONARDO":"2341:8036",
     "MEGA2560":"2341:0042",
     "MICROBIT":"0D28:0204",
     "HANDPY":"10C4:EA60",
     "HANDPY":"1A86:55D4"       #兼容新版掌控
     }
-    findboard={
+    self.findboard={
     "VID:PID=2341:0043":"UNO",
     "VID:PID=3343:8036":"LEONARDO",
     "VID:PID=2341:8036":"LEONARDO",
@@ -1896,7 +1935,7 @@ class Board:
     "VID:PID=10C4:EA60":"HANDPY",
     "VID:PID=1A86:55D4":"HANDPY"
     }
-    _vidpid = '''
+    self._vidpid = '''
     VID:PID=2341:0043
     VID:PID=3343:8036
     VID:PID=2341:8036
@@ -1905,7 +1944,7 @@ class Board:
     VID:PID=10C4:EA60
     VID:PID=1A86:55D4
     '''
-    times={  #命名不合理
+    self.duration={
     "UNO": 0.1,
     "LEONARDO": 0.1,
     "LEONARDO": 0.1,
@@ -1917,12 +1956,8 @@ class Board:
     }
     portlist=[]
     localportlist=[]
-    if self.boardname == "RPI":   #删除
-      print("Using local resources")
-      return (-1,-1) 
-    elif self.boardname == "UNIHIKER":
-      self.port = "/dev/ttyS3"
-    if self.port == None and self.boardname != "":  #自动寻找端口
+    
+    if self.port == None and self.boardname != "":
       plist = list(serial.tools.list_ports.comports())
       for port in plist:
         msg = list(port)
@@ -1959,52 +1994,55 @@ class Board:
       return 0,0
     print("[10] Opening "+self.port)
     name = platform.platform()
-    if name.find("Linux_vvBoard_OS")>=0 or name.find("Linux-4.4.159-aarch64-with-Ubuntu-16.04-xenial") >= 0:
-      os.system("echo scope | sudo -S /home/scope/software/scripts/arduino_burn_setup.sh Arduino_Reset")
-    if self.boardname == "UNIHIKER" and name.find("rockchip")>0:
-      if not os.path.exists("/sys/class/gpio/gpio80"):
-        os.system("echo 80 > /sys/class/gpio/export")#RST
-      if not os.path.exists("/sys/class/gpio/gpio69"):
-       os.system("echo 69 > /sys/class/gpio/export")#BOOT0      
-      os.system("echo out > /sys/class/gpio/gpio69/direction")
-      os.system("echo out > /sys/class/gpio/gpio80/direction")
-      os.system("echo 0 > /sys/class/gpio/gpio69/value")
-      os.system("echo 1 > /sys/class/gpio/gpio80/value")
-      os.system("echo 0 > /sys/class/gpio/gpio80/value")
-      os.system("echo 1 > /sys/class/gpio/gpio80/value")
-    if self.boardname == "LEONARDO":
-        time.sleep(1)
-    if self.boardname == "HANDPY":                                   #debug wsq handpy关闭串口复位问题,mac和win32下打开串口不同
-      if sys.platform == "win32":
-        self.serial = serial.Serial(self.port, 115200, dsrdtr = True, rtscts =True, timeout=times[self.boardname])
-      else:
-        self.serial = serial.Serial(self.port, 115200, timeout=times[self.boardname])
-    else:
-      self.serial = serial.Serial(self.port, 115200, timeout=times[self.boardname])
-    if self.boardname in ["UNO" , "MEGA2560"]:
-      time.sleep(2)
+    
+    self.res["reset"]()
+    #if name.find("Linux_vvBoard_OS")>=0 or name.find("Linux-4.4.159-aarch64-with-Ubuntu-16.04-xenial") >= 0:
+    #  os.system("echo scope | sudo -S /home/scope/software/scripts/arduino_burn_setup.sh Arduino_Reset")
+    #if self.boardname == "UNIHIKER" and name.find("rockchip")>0:
+    #  if not os.path.exists("/sys/class/gpio/gpio80"):
+    #    os.system("echo 80 > /sys/class/gpio/export")#RST
+    #  if not os.path.exists("/sys/class/gpio/gpio69"):
+    #   os.system("echo 69 > /sys/class/gpio/export")#BOOT0      
+    #  os.system("echo out > /sys/class/gpio/gpio69/direction")
+    #  os.system("echo out > /sys/class/gpio/gpio80/direction")
+    #  os.system("echo 0 > /sys/class/gpio/gpio69/value")
+    #  os.system("echo 1 > /sys/class/gpio/gpio80/value")
+    #  os.system("echo 0 > /sys/class/gpio/gpio80/value")
+    #  os.system("echo 1 > /sys/class/gpio/gpio80/value")
+    #if self.boardname == "LEONARDO":
+    #    time.sleep(1)
+    #if self.boardname == "HANDPY":    #debug wsq handpy关闭串口复位问题,mac和win32下打开串口不同
+    #  if sys.platform == "win32":
+    #    self.serial = serial.Serial(self.port, 115200, dsrdtr = True, rtscts =True, timeout=times[self.boardname])
+    #  else:
+    #    self.serial = serial.Serial(self.port, 115200, timeout=duration[self.boardname])
+    #else:
+    #  self.serial = serial.Serial(self.port, 115200, timeout=duration[self.boardname])
+    
+    self.serial = self.res["open_serial"](board)
     self.serial.read(self.serial.in_waiting)
     buf=bytearray(b"\xf0\x79\xf7")
     self.serial.write(buf)
     res = self.serial.read(5)
-    if len(res) < 3:
-      major=0
-      minor=0
-    elif res[0] == 0xF0 and res[1] == 0x79:
+    major=0
+    minor=0
+    
+    if len(res) >2 and res[0] == 0xF0 and res[1] == 0x79:
       major = res[2]
       minor = res[3]
-    else:
-      major=0
-      minor=0
+    
     if (major,minor) == (FIRMATA_MAJOR,FIRMATA_MINOR):
-      if self.boardname in ["HANDPY" , "MICROBIT"]:
-        self.serial.read(self.serial.in_waiting)
-        reset_buf=bytearray(b"\xf0\x0d\x55\xf7")
-        self.serial.write(reset_buf)
-        reset = self.serial.read(1024)
-      if self.is_PinPong:
-        self.serial.write(bytearray(b'\xf0v\x10\x00\x00\x00\x00\x00\x00\x00\xf7'))   #debug pinpong bread motor stop
-        self.serial.write(bytearray(b'\xf0v\x10\x00\x02\x00\x00\x00\x00\x00\xf7'))
+      self.res["soft_reset"]()
+    
+    #if (major,minor) == (FIRMATA_MAJOR,FIRMATA_MINOR):
+    #  if self.boardname in ["HANDPY" , "MICROBIT"]:
+    #    self.serial.read(self.serial.in_waiting)
+    #    reset_buf=bytearray(b"\xf0\x0d\x55\xf7")
+    #    self.serial.write(reset_buf)
+    #    reset = self.serial.read(1024)
+    #  if self.boardname == "PINPONG BOARD":
+    #    self.serial.write(bytearray(b'\xf0v\x10\x00\x00\x00\x00\x00\x00\x00\xf7'))   #debug pinpong bread motor stop
+    #    self.serial.write(bytearray(b'\xf0v\x10\x00\x02\x00\x00\x00\x00\x00\xf7'))
     return major,minor
   
   def disconnect(self):
@@ -2024,7 +2062,7 @@ class Board:
       self._i2c_init[bus_num] = True
       self.i2c[bus_num] = IIC(self,bus_num)
     return self.i2c[bus_num]
-
+'''
   def differ_microbit(self):       #区分microbit V1 V2
     if sys.platform == 'win32':
       try:
@@ -2077,7 +2115,7 @@ class Board:
       else:
         mount_point = None
         return False
-
+'''
   def get_spi_master(self, device_num=0, sck=None, mosi=None, miso=None, cs=None, baudrate=100000, polarity=0, phase=0, bits=8):
     if device_num == -1:#如果用户填写-1，自动分配device_num
       for i in range(len(self.spi)):
