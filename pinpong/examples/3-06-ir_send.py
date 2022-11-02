@@ -14,3 +14,4 @@ ir = IRRemote(Pin(Pin.D4))
 while True:
     ir.send(0xD3)               #一次只能8位数据
     time.sleep(0.5)
+    print("红外发射")

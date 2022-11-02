@@ -35,7 +35,9 @@ mic_res = {
     "pwm" : {
         "type" : "dfrobot",
         "class" : "DuinoPWM"
-        }
+        },
+    "dht11" : "dfrobot",
+    "dht22" : "dfrobot"
            
     }
 def init(board, boardname, port):

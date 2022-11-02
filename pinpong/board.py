@@ -53,7 +53,7 @@ import pinpong.extension.uno
 #import pinpong.extension.leonardo
 #import pinpong.extension.rpi
 import pinpong.extension.micro
-#import pinpong.extension.hand
+import pinpong.extension.hand
 
 
 class DuinoPin:
@@ -65,13 +65,13 @@ class DuinoPin:
       self.apin = pin-100 if pin >= 100 else -1
     else:
       self.pin = self.apin = pin
+    
+    
     if(mode == Pin.OUT):
       self.board.board.set_pin_mode_digital_output(self.pin)
     elif(mode == Pin.IN):
       self.board.board.set_pin_mode_digital_input(self.pin, callback=None)
     elif(mode == Pin.PWM):#为了支持面向过程的4个API而设计的此选项，尽量避免使用,使用PWM类代替
-      self.obj
-      
       self.board.board.set_pin_mode_pwm_output(self.pin)
     elif(mode == Pin.ANALOG):#为了支持面向过程的4个API而设计的此选项，尽量避免使用，使用ADC类代替
       
@@ -431,13 +431,14 @@ class Pin:
     self.pin = pin
     self.mode = mode
     #self.pin,self.apin = get_pin(self.board, pin)
-    
-      
-    
+
      # self.pin = board.res["pin"]["pinmap"][self.pin]
     self.apin = self.pin = pin
       
     self.obj = eval(board.res["pin"]["class"]+"(board, pin, mode)")
+    self.pin = self.obj.pin
+    self.apin = self.obj.apin
+   
    
   def value(self, v = None):
     if v == None:  #Read                      
@@ -488,6 +489,8 @@ class DuinoADC:
     
     self.board = board
     self.pin_obj = pin_obj
+    
+    #print("模拟引脚", self.pin_obj.apin)
     #MICROBIT HANDPY 使用协议 F0 xx(PIN) 02 DF私有Firamata协议
     #UNO使用标准的Firmata协议
     #if board.boardname in ["HANDPY", "MICROBIT"]:
@@ -510,7 +513,7 @@ class ADC:
     self.board = board
     self.pin_obj = pin_obj
     #self.obj = DuinoADC(board, pin_obj)
-    self.obj = eval(board.res["adc"]["class"]+"(board, pin_obj)")
+    self.obj = eval(self.board.res["adc"]["class"]+"(board, pin_obj)")
     
   def read(self):
     return self.obj.read()
@@ -1148,7 +1151,7 @@ class IRRecv:
 
     self.board = gboard
     
-    self.obj = eval(board.res["irrecv"]["class"]+"(self.board, pin_obj, callback)")
+    self.obj = eval(self.board.res["irrecv"]["class"]+"(self.board, pin_obj, callback)")
     
     #if self.board.boardname in ["RPI","NEZHA"]:
     #  self.obj = EVENTIRRecv(self.board, pin_obj, callback)
@@ -1185,10 +1188,11 @@ class IRRemote:
       board = gboard
     
     self.board = board
-    if self.board.boardname == "RPI":
-      self.obj = RPiIRRemote(board, pin_obj)
-    else:
-      self.obj = DuinoIRRemote(board, pin_obj)
+    self.obj = eval(self.board.res["irremote"]["class"]+"(self.board, pin_obj)")
+    #if self.board.boardname == "RPI":
+    #  self.obj = RPiIRRemote(board, pin_obj)
+    #else:
+    #  self.obj = DuinoIRRemote(board, pin_obj)
 
   def send(self, value):
     return self.obj.send(value)
@@ -1340,7 +1344,7 @@ class DuinoServo:
   
   def angle(self, _angle):
     #if self.board.boardname in ["HANDPY", "MICROBIT", "UNIHIKER"]:
-    if board.res["servo"]["type"] == "dfrobot":
+    if self.board.res["servo"]["type"] == "dfrobot":
       if self.pin_obj.pin < 16:
         self.board.board.servo_write(self.pin_obj.pin, _angle)
       else:
@@ -1593,8 +1597,16 @@ class HX711:
     self.board = board
     self.dout_pin = dout_pin
     self.sck_pin = sck_pin
-    self.dout_pin,self.dout_apin = get_pin(self.board, dout_pin)
-    self.sck_pin,self.sck_apin = get_pin(self.board, sck_pin)
+    if board.res["pin"]["pinnum"] == False:
+      self.dout_pin = dout_pin if dout_pin<20 else ((dout_pin-100+14) if dout_pin >= 100 else -1)  
+      self.dout_apin = dout_pin-100 if dout_pin >= 100 else -1
+      self.sck_pin = sck_pin if sck_pin<20 else ((sck_pin-100+14) if sck_pin >= 100 else -1)  
+      self.sck_apin = sck_pin-100 if sck_pin >= 100 else -1
+    else:
+      self.dout_pin = self.dout_apin = dout_pin
+      self.sck_pin = self.sck_apin = sck_pin
+   # self.dout_pin,self.dout_apin = get_pin(self.board, dout_pin)
+    #self.sck_pin,self.sck_apin = get_pin(self.board, sck_pin)
     self.scale = scale
     self.board.board.set_hx711_init(self.dout_pin, self.sck_pin, self.scale)
   
@@ -1687,7 +1699,7 @@ class Board:
       pass ###########
       return
 
-    print("pinpong0.2")
+    print("新的pinpong")
 
     if platform.platform().find("rockchip") > 0:  ###############如果上面插了一个uno怎么办？
       self.boardname = "UNIHIKER"
@@ -1708,10 +1720,10 @@ class Board:
     if self.connected: #Linux or Win SBC
       return self
     
-    self.pgm = Burner(self.boardname,self.port)
+    
     
     self.res["begin"](self)
-   
+    
     print("111111")
     major,minor = self.detect_firmata()
     
@@ -1723,8 +1735,9 @@ class Board:
       self.serial = self.port
       print("[35] Burning firmware...")
       cwdpath,_ = os.path.split(os.path.realpath(__file__))
-      print(cwdpath)
-      #print(self.res["firmware"])
+      self.pgm = Burner(self.boardname,self.port)
+      #print(cwdpath)
+      print(self.res["firmware"])
       self.pgm.burn(cwdpath + self.res["firmware"][0]+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+self.res["firmware"][1])
       print("烧录成功")
       time.sleep(2)
@@ -1869,7 +1882,7 @@ class Board:
 
   def _exit_handler(self, signum, frame):
     global gthreads
-    #print("exit_handler")
+    print("exit_handler")
     for thread in gthreads:
         _async_raise(thread.ident, SystemExit)
     sys.exit(0)

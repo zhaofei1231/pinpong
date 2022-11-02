@@ -9,21 +9,30 @@ from pinpong.base.comm import *
 
 
 han_res = {
+    "i2c" : None,
     "pin" : {
         "type" : "general",
         "class" : "DuinoPin",
-        "pinnum" : True,
-        
+        "pinnum" : True,  
         },
     "pwm" : {
         "class" : "DuinoPWM",
-        "type" : "general"
-    
+        "type" : "general" 
     },
     "adc" : {
         "type" : "dfrobot",
         "class" : "DuinoADC",
-        } 
+        },
+    "tone" : {
+        "type" : "dfrobot",
+        "class" : "DuinoTone"
+        },
+    "servo" : {
+        "type" : "general",
+        "class" : "DuinoServo"
+        },
+    "dht11" : "dfrobot",
+    "dht22" : "dfrobot"    
     }
   
 def init(board, boardname, port):

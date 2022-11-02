@@ -10,13 +10,13 @@ Board("microbit").begin()  #初始化，选择板型和端口号，不输入端�
 #Board("microbit","/dev/ttyACM0").begin()   #linux下指定端口初始化
 #Board("microbit","/dev/cu.usbmodem14101").begin()   #mac下指定端口初始化
 
-dht11 = DHT11(Pin(Pin.P0))
+#dht11 = DHT11(Pin(Pin.P0))
 dht22 = DHT22(Pin(Pin.P15))
 
 while True:
-  temp = dht11.temp_c() #读取摄氏温度
-  humi = dht11.humidity() #读取湿度
-  print("dht11 temperature=",temp," humidity=",humi)
+  #temp = dht11.temp_c() #读取摄氏温度
+  #humi = dht11.humidity() #读取湿度
+  #print("dht11 temperature=",temp," humidity=",humi)
   
   temp = dht22.temp_c() #读取摄氏温度
   humi = dht22.humidity() #读取湿度

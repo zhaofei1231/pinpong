@@ -421,7 +421,7 @@ class MBSensor_buttonA:
   def value(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_buttonA_is_pressed()
     
@@ -432,7 +432,7 @@ class MBSensor_buttonB:
   def value(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_buttonB_is_pressed()
 
@@ -443,7 +443,7 @@ class MBSensor_buttonAB:
   def value(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_buttonAB_is_pressed()
 
@@ -454,14 +454,14 @@ class MBSensor_touchPad_P:
   def is_touched(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_touchP()
   
   def read(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_read_touch_P()
     
@@ -472,14 +472,14 @@ class MBSensor_touchPad_Y:
   def is_touched(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_touchY()
     
   def read(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_read_touch_Y()
 
@@ -490,14 +490,14 @@ class MBSensor_touchPad_T:
   def is_touched(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_touchT()
     
   def read(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_read_touch_T()
 
@@ -508,14 +508,14 @@ class MBSensor_touchPad_H:
   def is_touched(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_touchH()
   
   def read(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_read_touch_H()
   
@@ -526,14 +526,14 @@ class MBSensor_touchPad_O:
   def is_touched(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_touchO()
     
   def read(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_read_touch_O()
     
@@ -544,14 +544,14 @@ class MBSensor_touchPad_N:
   def is_touched(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_touchN()
   
   def read(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_read_touch_N()
     
@@ -562,7 +562,7 @@ class MBSensor_sound:
   def read(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_read_sound()
     
@@ -573,7 +573,7 @@ class MBSensor_light:
   def read(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_read_light()
     
@@ -584,33 +584,33 @@ class MBSensor_acc:
   def get_x(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_get_accelerometer_X()
   
   def get_y(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_get_accelerometer_Y()
   
   def get_z(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return self.board.board.handpy_get_accelerometer_Z()
   
   def get_strength(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("HANDPY")
+      self.board = get_globalvar_value("HANDPY")["HANDPY"]
       self.board.board._report_sensor()
     return round(self.board.board.handpy_get_accelerometer_strength(),2)
 
 def touch_threshold(obj="", value=30):
-  board = get_globalvar_value("HANDPY")
+  board = get_globalvar_value("HANDPY")["HANDPY"]
   if value > 80:
     value = 80
   elif value < 0:

@@ -367,7 +367,7 @@ class MBSensor_buttonA:
   def is_pressed(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_buttonA_is_pressed()
 
@@ -379,7 +379,7 @@ class MBSensor_buttonB:
   def is_pressed(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_buttonB_is_pressed()
 
@@ -390,7 +390,7 @@ class MBSensor_buttonAB:
   def is_pressed(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_buttonAB_is_pressed()
 
@@ -401,14 +401,14 @@ class MBSensor_calibrate:
   def calibrate(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_cal_compass()
   
   def heading(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_get_compass()
 
@@ -419,7 +419,7 @@ class MBSensor_pin0:
   def is_touched(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_touch0()
 
@@ -430,7 +430,7 @@ class MBSensor_pin1:
   def is_touched(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_touch1()
 
@@ -441,7 +441,7 @@ class MBSensor_pin2:
   def is_touched(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_touch2()
 
@@ -465,7 +465,7 @@ class MBSensor_acc:
   def current_gesture(self):                   #兼容micropython的获取姿态current_gesture
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     val = self.board.board.microbit_get_gesture()
     if val:
@@ -483,28 +483,28 @@ class MBSensor_acc:
   def get_x(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_get_accelerometer_X()
   
   def get_y(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_get_accelerometer_Y()
   
   def get_z(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_get_accelerometer_Z()
   
   def get_strength(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_get_accelerometer_strength()
 
@@ -515,7 +515,7 @@ class MBSensor_brightness:
   def get_brightness(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_get_brightness()
 
@@ -526,14 +526,14 @@ class MBSensor_microphone:
   def sound_level(self):
     if self.first_flag:
       self.first_flag = False
-      self.board = get_globalvar_value("MICROBIT")
+      self.board = get_globalvar_value("MICROBIT")["MICROBIT"]
       self.board.board.microbit_report_sensor()
     return self.board.board.microbit_get_microphone()
 
 class MBWireless:
   def __init__(self, board=None):
     if board == None:
-      board = get_globalvar_value("MICROBIT")
+      board = get_globalvar_value("MICROBIT")["MICROBIT"]
     self.board = board
   
   def config(self, channel):
@@ -556,7 +556,7 @@ class MBWireless:
     self.board.board.microbbit_recv_data(callback)
 
 def temperature():
-  board = get_globalvar_value("MICROBIT")
+  board = get_globalvar_value("MICROBIT")["MICROBIT"]
   board.board.microbit_report_sensor()
   return board.board.microbit_get_temp()
 
