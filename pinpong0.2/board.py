@@ -18,9 +18,6 @@ from pinpong.base.comm import *
 
 from pinpong.extension.globalvar import *
 
-
-
-
 try:
   import smbus
 except Exception:
@@ -50,23 +47,28 @@ globalvar_init()
 
 
 import pinpong.extension.uno
-#import pinpong.extension.leonardo
+import pinpong.extension.leonardo
 #import pinpong.extension.rpi
 import pinpong.extension.micro
 import pinpong.extension.hand
+import pinpong.extension.leonardo
+import pinpong.extension.unihi
 
 
 class DuinoPin:
   def __init__(self, board=None, pin=None, mode=None):
+    
     self.mode = mode
     self.board = board
-    if board.res["pin"]["pinnum"] == False:
+    
+    if board.res["pin"]["pinnum"] == False:  #判断引脚是否复用
+      print("false")
       self.pin = pin if pin<20 else ((pin-100+14) if pin >= 100 else -1)  
       self.apin = pin-100 if pin >= 100 else -1
     else:
       self.pin = self.apin = pin
     
-    
+    print("DuinoPin", self.pin, self.apin)
     if(mode == Pin.OUT):
       self.board.board.set_pin_mode_digital_output(self.pin)
     elif(mode == Pin.IN):
@@ -77,7 +79,7 @@ class DuinoPin:
       
       
       #if board.boardname in ["HANDPY", "MICROBIT"]:
-      if board.res["pin"]["type"] == "dfrobot":    
+      if board.res["pin"]["type"] == "dfrobot":     #判断使用哪条pymata命令
         self.board.board.set_pin_analog_input(self.apin, None)
       else:
         self.board.board.set_pin_mode_analog_input(self.apin, None)
@@ -119,7 +121,8 @@ class DuinoPin:
   def write_analog(self, duty):
     self.duty=duty
     self.freq=100
-    if self.board.boardname in ["UNO", "LEONARDO"]:
+    
+    if self.board.res["pin"]["analog"] == "general":
       real_duty = int(self.duty / 255 * 100)
       real_duty = 255 if real_duty>255 else real_duty
       self.board.board.pwm_write(self.pin, self.freq, real_duty)
@@ -161,10 +164,8 @@ class RPiPin:
     elif(mode == Pin.IN):
       GPIO.setup(self.pin, GPIO.IN)
     elif(mode == Pin.PWM):#为了支持面向过程的4个API而设计的此选项，尽量避免使用,使用PWM类代替
-      #GPIO.setup(self.pin, GPIO.OUT)
-      #self.pwm=GPIO.PWM(self.pin, 1000)
-      self.pwm = PWM(board, pin_obj)
-      
+      GPIO.setup(self.pin, GPIO.OUT)
+      self.pwm=GPIO.PWM(self.pin, 1000)
       
 
   def value(self, v = None):
@@ -434,8 +435,8 @@ class Pin:
 
      # self.pin = board.res["pin"]["pinmap"][self.pin]
     self.apin = self.pin = pin
-      
-    self.obj = eval(board.res["pin"]["class"]+"(board, pin, mode)")
+    print("PIN", pin)  
+    self.obj = eval(board.res["pin"]["class"]+"(board, pin, mode)") #根据板子对象直接调用对应的pin方法
     self.pin = self.obj.pin
     self.apin = self.obj.apin
    
@@ -800,12 +801,14 @@ class SPI:
     #if self.board.spi[device_num] == None:
     #  if mosi:  #SoftSPI
     #    self.board.spi[device_num] = SoftSPI(board, sck, mosi, miso, cs, baudrate, polarity, phase, bits)
-    if self.board.boardname in ["RPI","NEZHA","JH7100"]:  #RPiSPI
-        #print("--------1111---bus_num=%d,device_num=%d"%(bus_num,device_num))
-      self.board.spi[bus_num][device_num] = RPiSPI(bus_num, device_num)
-        #print(self.board.spi[bus_num][device_num] )
-    else:
-      self.board.spi[bus_num][device_num] = DuinoSPI(self.board, device_num ,cs)
+    self.board.spi[bus_num][device_num] = eval(self.board.res["spi"]["class"]+"(bus_num, device_num)")
+    
+    #if self.board.boardname in ["RPI","NEZHA","JH7100"]:  #RPiSPI
+    #    #print("--------1111---bus_num=%d,device_num=%d"%(bus_num,device_num))
+    #  self.board.spi[bus_num][device_num] = RPiSPI(bus_num, device_num)
+    #    #print(self.board.spi[bus_num][device_num] )
+    #else:
+    #  self.board.spi[bus_num][device_num] = DuinoSPI(self.board, device_num ,cs)
     self.obj = self.board.spi[bus_num][device_num]
     #print("-----",self.obj)
   def read(self, num, default_value=0xff):
@@ -1017,6 +1020,7 @@ class UART:
         self.board.uart[bus_num] = TTYUART(board, tty_name, baud_rate)
       else:
         self.board.uart[bus_num] = DuinoUART(board, bus_num, baud_rate)
+      #self.board.uart[bus_num] = eval(self.board.res["uart"]["class"]+"(board, self.board.res["uart"]["para"], baud_rate)")  
     self.obj = self.board.uart[bus_num]
 
   def deinit(self):
@@ -1229,12 +1233,14 @@ class DuinoTone:
     self.freq_value = 100
     
   def on(self):
-    if self.board.boardname in ["MICROBIT", "HANDPY"]:   #是不是写错了？固件是否统一
+    #if self.board.boardname in ["MICROBIT", "HANDPY"]:   #是不是写错了？固件是否统一
+    if self.board.res["tone"]["type"] == "dfrobot": 
       self.board.board.dfrobot_play_tone(self.pin_obj.pin, self.freq_value, 0)
     self.board.board.play_tone(self.pin_obj.pin, self.freq_value, 0)
 
   def off(self):
-    if self.board.boardname in ["MICROBIT", "HANDPY"]:
+    #if self.board.boardname in ["MICROBIT", "HANDPY"]:
+    if self.board.res["tone"]["type"] == "dfrobot":
       self.board.board.dfrobot_play_tone(self.pin_obj.pin, 0, 0)
     self.board.board.play_tone(self.pin_obj.pin, 0, 0)
 
@@ -1250,7 +1256,8 @@ class DuinoTone:
         self.freq_value = v
 
   def tone(self, freq, duration):
-    if self.board.boardname in ["MICROBIT", "HANDPY"]:
+    #if self.board.boardname in ["MICROBIT", "HANDPY"]:
+    if self.board.res["tone"]["type"] == "dfrobot":
       self.board.board.dfrobot_play_tone(self.pin_obj.pin, freq, duration)
       self.board.board.play_tone(self.pin_obj.pin, freq, duration)
     else:
@@ -1276,9 +1283,7 @@ class Tone:
     
     self.obj = eval(board.res["tone"]["class"]+"(board, pin_obj)")
     
-    
-    
-      
+
   def on(self):
     self.obj.on()
 
@@ -1367,10 +1372,6 @@ class Servo:
     self.pin_obj = pin_obj
     
     self.obj = eval(board.res["servo"]["class"]+"(board, pin_obj)")
-    
-    
-    
-   
 
   def write_angle(self, value):
     self.obj.write_angle(value)
@@ -1515,13 +1516,16 @@ class SR04_URM10:
     self.board  = board
     self.trigger_pin_obj = trigger_pin_obj
     self.echo_pin_obj = echo_pin_obj
-    if self.board.boardname in ["MICROBIT", "HANDPY"]:
+    print(self.trigger_pin_obj.pin, self.echo_pin_obj.pin)
+    if self.board.res["sr04"]["type"] == "dfrobot":
+    #if self.board.boardname in ["MICROBIT", "HANDPY"]:
       self.board.board.dfrobot_set_pin_mode_sonar(self.trigger_pin_obj.pin, self.echo_pin_obj.pin)
     else:
       self.board.board.set_pin_mode_sonar(self.trigger_pin_obj.pin, self.echo_pin_obj.pin)
 
   def distance_cm(self):
-    if self.board.boardname in ["MICROBIT", "HANDPY"]:
+    #if self.board.boardname in ["MICROBIT", "HANDPY"]:
+    if self.board.res["sr04"]["type"] == "dfrobot":
       self.board.board.dfrobot_sonar_read(self.trigger_pin_obj.pin, self.echo_pin_obj.pin)
       time.sleep(0.01)
     return self.board.board.sonar_read(self.trigger_pin_obj.pin)[0]
@@ -1576,9 +1580,20 @@ class AudioAnalyzer :
     self.board = board
     self.strobe_pin = strobe_pin
     self.RST_pin = RST_pin
-    self.DC_pin,self.DC_apin = get_pin(self.board, DC_pin)
-    self.RST_pin,self.RST_apin = get_pin(self.board, RST_pin)
-    self.strobe_pin,self.strobe_apin = get_pin(self.board, strobe_pin)
+    if board.res["pin"]["pinnum"] == False:
+      self.DC_pin = DC_pin if DC_pin<20 else ((DC_pin-100+14) if DC_pin >= 100 else -1)  
+      self.DC_apin = DC_pin-100 if DC_pin >= 100 else -1
+      self.RST_pin = RST_pin if RST_pin<20 else ((RST_pin-100+14) if RST_pin >= 100 else -1)  
+      self.RST_apin = RST_pin-100 if RST_pin >= 100 else -1
+      self.strobe_pin = strobe_pin if strobe_pin<20 else ((strobe_pin-100+14) if strobe_pin >= 100 else -1)  
+      self.strobe_apin = strobe_pin-100 if strobe_pin >= 100 else -1
+    else:
+      self.DC_pin = self.DC_apin = DC_pin
+      self.RST_pin = self.RST_apin = RST_pin
+      self.strobe_pin = self.strobe_apin = strobe_pin
+      #self.DC_pin,self.DC_apin = get_pin(self.board, DC_pin)
+      #self.RST_pin,self.RST_apin = get_pin(self.board, RST_pin)
+      #self.strobe_pin,self.strobe_apin = get_pin(self.board, strobe_pin)
     self.board.board.set_audio_init(self.strobe_pin, self.RST_pin, self.DC_pin)
     
   def read_freq(self):
@@ -1693,7 +1708,7 @@ class Board:
     
     signal.signal(signal.SIGINT, self._exit_handler)
 
-    self.res = get_globalvar_value(self.boardname)
+    
     
     if self.res == None:
       pass ###########
@@ -1702,8 +1717,11 @@ class Board:
     print("新的pinpong")
 
     if platform.platform().find("rockchip") > 0:  ###############如果上面插了一个uno怎么办？
+      print("找板子UNIHIKER")
       self.boardname = "UNIHIKER"
-
+    
+    print(self.boardname)
+    self.res = get_globalvar_value(self.boardname)
     
     if gboard == None:
       gboard = self
@@ -1711,20 +1729,18 @@ class Board:
     
     self.res["init"](self, boardname, port)
     
-    print(self.res)
+    #print("板子信息", self.res)
 
   def begin(self):
-    printlogo() if self.boardname == 'UNIHIKER' else printlogo_big()
+    #printlogo() if self.boardname == 'UNIHIKER' else printlogo_big()
     version = sys.version.split(' ')[0]
     plat = platform.platform()
     if self.connected: #Linux or Win SBC
       return self
-    
-    
-    
+
     self.res["begin"](self)
     
-    print("111111")
+    #print("111111")
     major,minor = self.detect_firmata()
     
     print("[32] Firmata ID: %d.%d  pinpongV0.1"%(major,minor))
@@ -1736,9 +1752,11 @@ class Board:
       print("[35] Burning firmware...")
       cwdpath,_ = os.path.split(os.path.realpath(__file__))
       self.pgm = Burner(self.boardname,self.port)
-      #print(cwdpath)
+      self.res["find_port"](self)
       print(self.res["firmware"])
+      
       self.pgm.burn(cwdpath + self.res["firmware"][0]+str(FIRMATA_MAJOR)+"."+str(FIRMATA_MINOR)+self.res["firmware"][1])
+
       print("烧录成功")
       time.sleep(2)
       print("[37] Burn done")
@@ -1820,7 +1838,7 @@ class Board:
     print("[10] Opening "+self.port)
     name = platform.platform()
     
-    #self.res["reset"]()
+    self.res["reset"]()
     
     self.res["open_serial"](self)
     #print("打开串口")

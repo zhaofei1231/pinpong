@@ -19,7 +19,7 @@ def ir_recv3(data):
 ir3 = IRRecv(Pin(3),ir_recv3)
 
 while(1):
-#  v = ir2.read()
+# v = ir2.read()
 #  if v:
 #    print("------Pin2--------")
 #    print(v)

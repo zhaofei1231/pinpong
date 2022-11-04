@@ -11,11 +11,18 @@ from pinpong.base.comm import *
 
 mic_res = {
     "i2c" : None,
-
+    "spi" : {
+        "class" : "DuinoSPI"
+        
+        },
+    "uart" : {
+        "class" : "DuinoUART" 
+        },
     "pin" : {
         "type" : "dfrobot",
         "class" : "DuinoPin",
-        "pinnum" : True        
+        "pinnum" : True,
+        "analog" : "dfrobot"        
         },
     "tone" : {
         "type" : "dfrobot",
@@ -37,7 +44,13 @@ mic_res = {
         "class" : "DuinoPWM"
         },
     "dht11" : "dfrobot",
-    "dht22" : "dfrobot"
+    "dht22" : "dfrobot",
+    "irrecv" : {
+        "class" : "DuinoIRRecv"
+        },
+    "sr04" : {
+        "type" : "dfrobot"
+        }
            
     }
 def init(board, boardname, port):
@@ -119,11 +132,18 @@ def soft_reset(board):
   board.serial.write(reset_buf)
   reset = board.serial.read(1024)
   
+def reset():
+  pass  
+  
+def find_port(board):
+  pass
+  
+  
 mic_res["init"] = init
 mic_res["begin"] = begin
 mic_res["open_serial"] = open_serial
 mic_res["soft_reset"] = soft_reset  
-  
-  
+mic_res["reset"] = reset
+uno_res["find_port"] = find_port  
   
 set_globalvar_value("MICROBIT", mic_res)

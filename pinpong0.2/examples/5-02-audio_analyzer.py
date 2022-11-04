@@ -2,7 +2,7 @@
 
 #实验效果：读取音频分析
 import time
-from pinpong.board import Board,Pin
+from pinpong.board import Board,Pin,AudioAnalyzer
 
 strobe_Pin = Pin.A0
 rst_Pin = Pin.D5

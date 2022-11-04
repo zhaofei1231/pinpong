@@ -10,12 +10,19 @@ from pinpong.extension.comm import *
 
 uno_res = {
     "i2c" : None, 
+    "uart" : {
+        "class" : "DuinoUART" 
+        },
+    "spi" : {
+        "class" : "DuinoSPI"
+        
+        },
     "uart" : [0],
     "pin" : {
         "type" : "general",
         "class" : "DuinoPin",
         "pinnum" : False,
-        "pinmap" : []
+        "analog" : "general"
         },
     "adc" : {
         "class" : "DuinoADC",
@@ -36,6 +43,9 @@ uno_res = {
         },
     "irremote" : {
         "class" : "DuinoIRRemote"
+        },
+    "sr04" : {
+        "type" : "general"
         }        
     }
 
@@ -67,8 +77,8 @@ def soft_reset(board):
   pass
   
 def reset():
-  self.serial = serial.Serial(self.port, 115200, timeout=times[self.boardname])
-  
+  #self.serial = serial.Serial(self.port, 115200, timeout=times[self.boardname])
+  pass
 def reset_delay():
   time.sleep(2)
 
@@ -76,11 +86,15 @@ def open_serial(board):
   board.serial = serial.Serial(board.port, 115200, timeout=board.duration[board.boardname])
   time.sleep(2)
 
+def find_port(board):
+  pass
 
 uno_res["init"] = init
 uno_res["begin"] = begin
 uno_res["reset"] = reset
 uno_res["soft_reset"] = soft_reset
 uno_res["open_serial"] = open_serial
+uno_res["find_port"] = find_port
+
 
 set_globalvar_value("UNO", uno_res)

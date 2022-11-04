@@ -14,14 +14,14 @@ class GD32Sensor_buttonA:
     def is_pressed(self):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         return self.board.board.GD32V_buttonA_is_pressed()
 
     def irq(self, trigger=None, handler=None):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         self.Pin = Pin(Pin.P27)
         self.board.board.GD32V_buttonA_irq(trigger, handler, self.Pin)
@@ -37,14 +37,14 @@ class GD32Sensor_buttonB:
     def is_pressed(self):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         return self.board.board.GD32V_buttonB_is_pressed()
 
     def irq(self, trigger=None, handler=None):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         self.Pin = Pin(Pin.P28)
         return self.board.board.GD32V_buttonB_irq(trigger, handler, self.Pin)
@@ -60,7 +60,7 @@ class GD32Sensor_light:
     def read(self):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         return self.board.board.GD32V_read_light()
 
@@ -72,21 +72,21 @@ class GD32Sensor_acc:
     def get_x(self):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         return self.board.board.GD32V_get_accelerometer_X()
 
     def get_y(self):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         return self.board.board.GD32V_get_accelerometer_Y()
 
     def get_z(self):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         return self.board.board.GD32V_get_accelerometer_Z()
 
@@ -100,21 +100,21 @@ class GD32Sensor_gyro:
     def get_x(self):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         return self.board.board.GD32V_get_Macceleration_X()
 
     def get_y(self):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         return self.board.board.GD32V_get_Macceleration_Y()
 
     def get_z(self):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
             self.board.board._report_sensor()
         return self.board.board.GD32V_get_Macceleration_Z()
 
@@ -147,7 +147,7 @@ class GD32_buzz:
     OnceInBackground = 4
     ForeverInBackground = 8
 
-    BEAT_1 = 4
+    BEAT_1 = 4,
     BEAT_1_2 = 2
     BEAT_1_4 = 1
     BEAT_3_4 = 3
@@ -200,7 +200,7 @@ class GD32_buzz:
     def play(self, index, options):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
         self.board.board.GD32V_play_buzz(index, options)
         if options == self.Once or options == self.Forever:
             while not self.board.board.GD32V_get_state():
@@ -209,7 +209,7 @@ class GD32_buzz:
     def pitch(self, _freq, beat=None):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
         if not isinstance(_freq, str) and not isinstance(_freq, list) and beat == None:
             self.board.board.GD32V_play_note(_freq)
         else:
@@ -240,19 +240,19 @@ class GD32_buzz:
     def set_tempo(self, ticks, bpm):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
         self.board.board.GD32V_set_ticks_tempo(ticks, bpm)
 
     def stop(self):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
         self.board.board.GD32V_buzz_stop()
 
     def redirect(self, pin):
         if self.first_flag:
             self.first_flag = False
-            self.board = get_globalvar_value("UNIHIKER")
+            self.board = get_globalvar_value("UNIHIKER")["UNIHIKER"]
         self.board.board.GD32V_buzz_redirect(pin)
 
 button_a = GD32Sensor_buttonA()  # 兼容micropython方法

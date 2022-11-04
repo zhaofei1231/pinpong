@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from comm import *
+from pinpong.extension.comm import *
+from pinpong.extension.globalvar import *
+from pinpong.base.comm import *
 
 try:
   import RPi.GPIO as GPIO
@@ -8,19 +10,22 @@ except Exception:
   pass
   
 rpi_res = {
-    "i2c" : [2],
+    "i2c" : 1,
+    "uart" : {
+        "class" : "TTYUART"
+        
+        },
+    "spi" : {
+        "class" : "RPiSPI"
+        
+        },
     "uart" : [1,2],
-    "begin":begin,
-    "init":init,
     "pin" : {
         "type" : "general",
         "class" : "RPiPin",
         "pinnum" : True,
-        "pinmap" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 
-         13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-         26, 27, 28, 29, 30, 31, 32]
-        
-        }
+        "analog" : "dfrobot"
+        },
     "pwm" : {
         "type" : "dfrobot",
         "class" : "RpiPWM",
@@ -28,20 +33,14 @@ rpi_res = {
     "tone" : {
         "type" : "general",
         "class" : "RpiTone"
-        } 
+        }, 
     "servo" : {
         "type" : "general",
-        "class" : "RpiServo",
+        "class" : "RPiServo",
         },
     "irrecv" : {
         "class" : "EVENTIRRecv"
-        },
-    "irremote" : {
-        
-        }    
-        
-    
-    
+        }
     }    
 gthreads = []
 
@@ -61,10 +60,13 @@ def init(board, boardname, port):
   board.connected = True
   printlogo()
 
+def find_port(board):
+  pass
 
- 
- 
- 
+rpi_res["begin"] = begin 
+rpi_res["init"] = init
+uno_res["find_port"] = find_port
+
 set_globalvar_value("RPI", rpi_res)
 
   
