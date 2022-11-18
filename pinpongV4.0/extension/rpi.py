@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import sys
+import platform
 
 from pinpong.extension.globalvar import *
 from pinpong.base.comm import *
@@ -15,11 +17,11 @@ rpi_res = {
         "class" : " LinuxI2C"
         },
     "spi" : {
-        "busnum" : [(0,0)],
+        "busnum" : [(0,0),(0,1)],
         "class" : "RPiSPI"
         },
     "uart" : {
-        "busnum" : [0],
+        "busnum" : ["/dev/ttyS0", "/dev/ttyAMA0", "/dev/ttyUSB0"],
         "class" : "TTYUART",           
         },
     "pin" : {
@@ -59,10 +61,6 @@ def begin(board):
   plat = platform.platform()
   print("[01] Python"+version+" "+plat+(" " if board.boardname == "" else " Board: "+ board.boardname))
   
-
-#资源初始化
-#打印logo
-#  
 def init(board, boardname, port):
   GPIO.setmode(GPIO.BCM)
   GPIO.setwarnings(False)

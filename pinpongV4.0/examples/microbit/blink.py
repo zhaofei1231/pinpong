@@ -11,7 +11,7 @@ Board("microbit").begin()#初始化，选择板型和端口号，不输入端口
 #Board("microbit","/dev/ttyACM0").begin()   #linux下指定端口初始化
 #Board("microbit","/dev/cu.usbmodem14101").begin()   #mac下指定端口初始化
 
-led = Pin(Pin.P0, Pin.OUT) #引脚初始化为电平输出
+led = Pin(Pin.P1, Pin.OUT) #引脚初始化为电平输出
 
 while True:
   led.value(1) #输出高电平

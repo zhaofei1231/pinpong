@@ -326,16 +326,13 @@ class PN532:
     pn532_ack = [0x00,0x00,0xFF,0x00,0xFF,0x00]
     time.sleep(0.03)
     value1 = self.read_reg(8)
-    print(value1)
     if value1 == []:
       return False
     time.sleep(0.03)
     value2 = self.read_reg(x - 4)
-    print(value2)
     if value2 == []:
       return False
     self.receive_ACK = value1 + value2
-#    print(self.receive_ACK[:6])
     if pn532_ack != list(self.receive_ACK[:6]):
       return False
     return True

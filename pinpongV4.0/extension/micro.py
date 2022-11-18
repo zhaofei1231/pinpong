@@ -6,7 +6,6 @@ import sys
 import subprocess
 import re
 
-
 from pinpong.extension.globalvar import *
 from pinpong.base.comm import *
 
@@ -65,7 +64,7 @@ mic_res = {
         },
     "irremote" : {
         "class" : "DuinoIRRemote",
-        "pininvalid" : []
+        "pininvalid" : [1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,19,20]
         },
     "sr04" : {
         "type" : "dfrobot_firmata",
@@ -163,16 +162,12 @@ def get_pin(vpin):
   dpin = apin = vpin  
   return dpin,apin
   
-  
 mic_res["init"] = init
 mic_res["begin"] = begin
 mic_res["open_serial"] = open_serial
 mic_res["soft_reset"] = soft_reset  
 mic_res["reset"] = reset
 mic_res["find_port"] = find_port  
-mic_res["get_pin"] = get_pin
-  
-  
-print("载入资源")  
+mic_res["get_pin"] = get_pin 
 
 set_globalvar_value("MICROBIT", mic_res)

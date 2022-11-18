@@ -10,7 +10,7 @@ Board("microbit").begin()  #初始化，选择板型和端口号，不输入端�
 #Board("microbit","/dev/ttyACM0").begin()   #linux下指定端口初始化
 #Board("microbit","/dev/cu.usbmodem14101").begin()   #mac下指定端口初始化
 
-pwm0 = PWM(Pin(Pin.P19)) #将Pin传入PWM中实现模拟输出  引脚有P0,P1,P5,P6,P7,P8,P9,P11,P13,P14,P15,P16
+pwm0 = PWM(Pin(Pin.P0)) #将Pin传入PWM中实现模拟输出  引脚有P0,P1,P5,P6,P7,P8,P9,P11,P13,P14,P15,P16
 
 while True:
   j = 0

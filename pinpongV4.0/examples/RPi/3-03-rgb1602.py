@@ -13,10 +13,10 @@ lcd = RGB1602(bus_num = 1)
 print("I2C RGB1602 TEST...")
 
 lcd.set_rgb(0,50,0);       #设置RGB值
-lcd.printf("PinPong")       #显示 "PinPong"
+lcd.print("PinPong")       #显示 "PinPong"
 
 lcd.set_cursor(1,1)        #设置光标位置
-lcd.printf(1234)            #显示数字
+lcd.print(1234)            #显示数字
 
 while True:
   time.sleep(1)

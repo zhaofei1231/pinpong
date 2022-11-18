@@ -58,7 +58,6 @@ class DuinoPin:
     self.mode = mode
     self.board = board
     self.pin, self.apin = board.res["get_pin"](pin)  #通过板子信息获取对应引脚
-    print("DuinoPin", self.pin, self.apin)
     if(mode == Pin.OUT):
       self.board.board.set_pin_mode_digital_output(self.pin)
     elif(mode == Pin.IN):
@@ -142,7 +141,6 @@ class RPiPin:
     if(pin == None):
       self.pin = None
       return
-
     self.pin = pin
     self.mode = mode
     if(mode == Pin.OUT):
@@ -291,11 +289,11 @@ class SYSFSPin:
     elif(mode == Pin.IN):
       os.system('echo in > ' + self.direction_path)
 
-#继承包含引脚信息定义的类
+#继承自包含引脚信息定义的类
 class Pin(PinInformation):
   def __init__(self, board=None, pin=None, mode=None):
     if isinstance(board, int):#兼容面向过程的4个api
-      mode = pin                  #***pin为什么传给mode
+      mode = pin                 
       pin = board
       board = gboard
     if board == None:
@@ -358,10 +356,8 @@ class DuinoADC:
     self.board = board
     self.pin_obj = pin_obj
     
-    #print("模拟引脚", self.pin_obj.apin)
     #MICROBIT HANDPY 使用协议 F0 xx(PIN) 02 DF私有Firamata协议
     #UNO使用标准的Firmata协议
-    #if board.boardname in ["HANDPY", "MICROBIT"]:
     if board.res["adc"]["type"] == "dfrobot_firmata":     
       self.board.board.set_pin_analog_input(self.pin_obj.apin, None)
     else:
@@ -707,6 +703,7 @@ class LinuxI2C:
   def __init__(self, board, bus_num=1):
     self.bus_num = bus_num
     self.i2c = I2CTrans(bus_num)
+    
 
   def scan(self):
     plist=[]
@@ -722,23 +719,15 @@ class LinuxI2C:
     self.i2c.transfer(writing(i2c_addr, value))
 
   def readfrom(self, i2c_addr, read_byte):
-    value = self.i2c.transfer(reading(i2c_addr, read_byte))
-    read_buf = []
-    for i in range(read_byte):
-      read_buf.append(value[0][i])
-    return read_buf
- 
+    return self.i2c.read(reading(i2c_addr, read_byte), read_byte)
+     
   def readfrom_mem(self, i2c_addr, reg, read_byte):
     buf = []
     msg = []
-    read_buf = []
     buf.append(reg)  
     msg.append(writing(i2c_addr, buf))
     msg.append(reading(i2c_addr, read_byte))  
-    value = self.i2c.transfer(*msg)
-    for i in range(read_byte):
-      read_buf.append(value[0][i])
-    return read_buf
+    return self.i2c.read_mem(msg, read_byte)
   
   def readfrom_mem_restart_transmission(self, i2c_addr, reg, read_byte):
     return self.readfrom_mem(i2c_addr, reg, read_byte)
@@ -759,7 +748,7 @@ class I2C:
     self.board = board
     if self.board.i2c[bus_num] == None:
       self.bus_num = bus_num
-
+    
     if bus_num not in board.res["i2c"]["busnum"]:
       raise ValueError("i2c不支持该设备%d"%bus_num, "支持",board.res["i2c"]["busnum"])
     self.board.i2c[bus_num] = eval(self.board.res["i2c"]["class"] + "(board, bus_num)")
@@ -786,6 +775,7 @@ class I2C:
 class TTYUART:
   def __init__(self, board, tty_name, baud_rate):
     self.board = board
+    
     self.uart = serial.Serial(tty_name, baud_rate, timeout=0.1)
 
   def init(self, baud_rate = 9600, bits = 0, parity = 0, stop = 1):
@@ -868,19 +858,20 @@ class UART:
     elif isinstance(board, int):
       bus_num = board
       board = gboard
-      self.board = board
     elif board == None:
       board = gboard
-      self.board = board
+    self.board = board
+    print(self.board)
     if self.board.uart[bus_num] == None:
       self.bus_num = bus_num
-    if bus_num not in board.res["uart"]["busnum"]:
-      raise ValueError("uart不支持该设备%d"%bus_num, "支持",board.res["uart"]["busnum"])
     if self.board.res["uart"]["class"] == "TTYUART":
+      if tty_name not in board.res["uart"]["busnum"]:
+        raise ValueError("uart不支持该设备%s"%tty_name, "支持",board.res["uart"]["busnum"])
       self.board.uart[bus_num] = TTYUART(board, tty_name, baud_rate)
     else:
+      if bus_num not in board.res["uart"]["busnum"]:
+        raise ValueError("uart不支持该设备%d"%bus_num, "支持",board.res["uart"]["busnum"])
       self.board.uart[bus_num] = DuinoUART(board, bus_num, baud_rate)
-    print(self.board.uart)
     self.obj = self.board.uart[bus_num]
 
   def deinit(self):
@@ -893,7 +884,6 @@ class UART:
     return self.obj.writechar(data)
 
   def write(self, data):
-    print("fasongshujv", data)
     self.obj.write(data)
 
   def readchar(self):
@@ -922,6 +912,7 @@ class ModBus:
         self.master = modbus[port.upper()]
       else:
         ser = serial.Serial(port=port,baudrate=9600, bytesize=8, parity='N', stopbits=1)
+        master.set_timeout(1.0)
         self.master = modbus_rtu.RtuMaster(ser)
         self.ser = ser
         self.board.modbus[port.upper()] = self.master
@@ -1013,9 +1004,10 @@ class IRRecv:
     elif callable(board):
       pin_obj = Pin(20)
       callback = board
-    if pin_obj.pin in board.res["irrecv"]["pininvalid"]:
+    self.board = gboard  
+    if pin_obj.pin in self.board.res["irrecv"]["pininvalid"]:
       raise ValueError("irrecv不支持该引脚%d"%pin_obj.pin, "不支持引脚名单",board.res["irrecv"]["pininvalid"])
-    self.board = gboard   
+       
     self.obj = eval(self.board.res["irrecv"]["class"]+"(self.board, pin_obj, callback)") 
    
   def read(self):

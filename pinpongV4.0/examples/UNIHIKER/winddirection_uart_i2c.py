@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-#SEN0482:é£å‘æµ‹é‡,éœ€æ­é…RS485è½¬UARTæ¨¡å—(DFR0845)ã€IICè½¬ä¸²å£æ¨¡å—(DFR0627)ä½¿ç”¨
+#SEN0482:·çÏò²âÁ¿,Ğè´îÅäRS485×ªUARTÄ£¿é(DFR0845)¡¢IIC×ª´®¿ÚÄ£¿é(DFR0627)Ê¹ÓÃ
 
 import time
 from pinpong.board import Board
 from pinpong.libs.rs485winddirection_rs485touart_uarttoi2c import IICSerialWindDirection
 
-Board("UNIHIKER").begin()  #åˆå§‹åŒ–ï¼Œé€‰æ‹©æ¿å‹å’Œç«¯å£å·ï¼Œä¸è¾“å…¥ç«¯å£å·åˆ™è¿›è¡Œè‡ªåŠ¨è¯†åˆ«
+Board("uno").begin()  #³õÊ¼»¯£¬Ñ¡Ôñ°åĞÍºÍ¶Ë¿ÚºÅ£¬²»ÊäÈë¶Ë¿ÚºÅÔò½øĞĞ×Ô¶¯Ê¶±ğ
 
-wx = IICSerialWindDirection(IICSerialWindDirection.SUBUART_CHANNEL_1, IA1 = 1, IA0 = 1)
+wx = IICSerialWindDirection(IICSerialWindDirection.SUBUART_CHANNEL_1, IA1 = 0, IA0 = 0)
 
 wx.modify_address(0, 2)
 

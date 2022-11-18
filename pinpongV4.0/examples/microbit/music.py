@@ -11,7 +11,7 @@ Board("microbit").begin()#初始化，选择板型和端口号，不输入端口
 
 #接口播放音乐：DADADADUM、ENTERTAINER、PRELUDE、ODE、NYAN、RINGTONE、FUNK、BLUES、BIRTHDAY、WEDDING、FUNERAL、PUNCHLINE、BADDY
 #CHASE、BA_DING、WAWAWAWAA、JUMP_UP、JUMP_DOWN、POWER_UP、POWER_DOWN
-music.play(music.ENTERTAINER, Pin.P0, wait = False)               #后台播放音乐
+#music.play(music.ENTERTAINER, Pin.P0, wait = False)               #后台播放音乐
 #music.play(music.DADADADUM, Pin.P0, wait = True)                 #播放音乐直到结束
 #music.play(music.ENTERTAINER, pin = pin_speaker, wait = False)   #microbitV2板载蜂鸣器播放音乐
 #music.set_tempo(220)                                             #设置声音速度为x

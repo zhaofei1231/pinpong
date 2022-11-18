@@ -69,13 +69,28 @@ class I2CTrans(object):
     def close(self):
         posix.close(self.fd)
     
+    def read(self, msgs, read_byte):
+        print("newscaadasda")
+        value = self.transfer(msgs)
+        read_buf = []
+        for i in range(read_byte):    #返回字节数组列表，进行数据处理
+            read_buf.append(value[0][i])    
+        return read_buf
+     
+    def read_mem(self, msgs, read_byte):
+        value = self.transfer(*msgs)
+        read_buf = []
+        for i in range(read_byte):    #返回字节数组列表，进行数据处理
+            read_buf.append(value[0][i])              
+        return read_buf
+        
     def transfer(self, *msgs):
         msg_count = len(msgs)
         msg_array = (i2c_msg*msg_count)(*msgs)
-        ioctl_msg = i2c_rdwr_data(msgs=msg_array, nmsgs=msg_count)
-        ioctl(self.fd, I2C_RDWR, ioctl_msg)
-        read_buf = [string_at(m.buf, m.len) for m in msgs if (m.flags & I2C_M_RD)]       
-        return read_buf
+        ioctl_arg = i2c_rdwr_data(msgs=msg_array, nmsgs=msg_count)
+        ioctl(self.fd, I2C_RDWR, ioctl_arg)
+        read_data = [string_at(m.buf, m.len) for m in msgs if (m.flags & I2C_M_RD)]        
+        return read_data
 
 def reading(addr, n_bytes):
 

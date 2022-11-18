@@ -7,7 +7,7 @@ from pinpong.board import Board,Pin,Servo
 
 Board("UNIHIKER").begin()  #初始化，选择板型，不输入板型则进行自动识别
 
-s1 = Servo(Pin(Pin.P10)) #将Pin传入Servo中初始化舵机引脚,支持P0 P2 P3 P8 P9 P10 P16  P21 P22 P23
+s1 = Servo(Pin(Pin.P0)) #将Pin传入Servo中初始化舵机引脚,支持P0 P2 P3 P8 P9 P10 
 
 while True:
   s1.angle(0) #控制舵机转到0度位置

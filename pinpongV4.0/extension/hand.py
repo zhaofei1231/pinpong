@@ -71,7 +71,6 @@ han_res = {
     }
   
 def init(board, boardname, port):
-  
   board.connected = False
   
 def begin(board):
@@ -99,7 +98,6 @@ def find_port(board):
 def get_pin(vpin):
   if vpin not in han_res["pin"]["pinnum"]:
     raise ValueError("handpy不支持该引脚%d"%vpin, "支持引脚",han_res["pin"]["pinnum"])
-
   dpin = apin = vpin
   return dpin,apin
 
