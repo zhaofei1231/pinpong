@@ -31,7 +31,7 @@ mic_res = {
         "class" : "DuinoPin"        
         }, 
     "pwm" : {
-        "pinpwm" : [0,1,2,4,5,6,7,8,11,13,14,15,16],
+        "pinpwm" : [1,2,4,5,6,7,8,11,13,14,15,16],
         "type" : "dfrobot_firmata",
         "class" : "DuinoPWM"       
         },

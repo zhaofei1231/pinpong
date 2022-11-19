@@ -5,13 +5,13 @@
 import time
 from pinpong.board import Board,Pin,Tone
 
-Board("handpy").begin()  #初始化，选择板型和端口号，不输入端口号则进行自动识别
+Board("").begin()  #初始化，选择板型和端口号，不输入端口号则进行自动识别
 #Board("handpy","COM36").begin()  #windows下指定端口初始化
 #Board("handpy","/dev/ttyACM0").begin()   #linux下指定端口初始化
 #Board("handpy","/dev/cu.usbmodem14101").begin()   #mac下指定端口初始化
 
 #tone = Tone(Pin(Pin.onboard)) #使用板载蜂鸣器
-tone = Tone(Pin(Pin.P4)) #将Pin传入Tone中实现模拟输出
+tone = Tone(Pin(Pin.P1)) #将Pin传入Tone中实现模拟输出
 
 tone.freq(200) #按照设置的频率播放
 

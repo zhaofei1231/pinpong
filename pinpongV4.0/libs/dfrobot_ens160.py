@@ -27,7 +27,7 @@ class Ens160():
     
     def get_status(self):
         data = self.__read_reg(self.ENS160_DATA_STATUS_REG, 1)
-        return (data[0] & 0b00001100)
+        return ((data[0] >> 2) & 0b00000011)
 
     def get_aqi(self):
         data = self.__read_reg(self.ENS160_DATA_AQI_REG, 1)

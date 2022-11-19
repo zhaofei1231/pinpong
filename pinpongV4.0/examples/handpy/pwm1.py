@@ -10,7 +10,7 @@ Board("handpy").begin()  #初始化，选择板型和端口号，不输入端口
 #Board("handpy","/dev/ttyACM0").begin()   #linux下指定端口初始化
 #Board("handpy","/dev/cu.usbmodem14101").begin()   #mac下指定端口初始化
 
-pwm0 = Pin(Pin.P0, Pin.PWM)
+pwm0 = Pin(Pin.P1, Pin.PWM)
 
 while True:
   for i in range(1024): #从0到1024循环

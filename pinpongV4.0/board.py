@@ -8,7 +8,7 @@ import ctypes
 import serial
 import signal
 import platform
-import serial.tools.list_ports
+#import serial.tools.list_ports
 import subprocess
 import threading
 
@@ -303,6 +303,7 @@ class Pin(PinInformation):
       return
     self.pin = pin
     self.mode = mode
+
     self.pin, self.apin = board.res["get_pin"](pin)
     self.obj = eval(board.res["pin"]["class"]+"(board, pin, mode)") #根据板子对象直接调用对应的pin方法
    
@@ -373,8 +374,8 @@ class ADC:
       board = gboard
     elif board == None:
       board = gboard
-    if pin_obj.pin not in board.res["adc"]["pinadc"]:
-      raise ValueError("adc不支持该引脚%d"%pin_obj.pin, "支持引脚", board.res["adc"]["pinadc"])
+    if pin_obj.apin not in board.res["adc"]["pinadc"]:
+      raise ValueError("adc不支持该引脚%d"%pin_obj.apin, "支持引脚", board.res["adc"]["pinadc"])
     self.board = board
     self.pin_obj = pin_obj
     self.obj = eval(self.board.res["adc"]["class"]+"(board, pin_obj)")
@@ -1308,6 +1309,7 @@ class Board:
   def __init__(self, boardname="", port=None):
     global gboard
     gboard = None
+    print("pinpong0.5.1")
     self.boardname = boardname.upper()
     self.port = port
     self.connected = False
@@ -1317,12 +1319,14 @@ class Board:
     self.uart = [None, None, None, None, None]
     self.modbus = {}
     self.spi = [[None, None], [None, None]]
-    
+  
     signal.signal(signal.SIGINT, self._exit_handler)
 
     if platform.platform().find("rockchip") > 0:  ###############如果上面插了一个uno怎么办？
       self.boardname = "UNIHIKER"####验收的时候讨论下这句话是否可以去掉
-      
+    
+    find_board(self)
+    
     self.res = get_globalvar_value(self.boardname) #获取板子信息资源
     if self.res == None:
       raise ValueError("没有找到开发板信息,检查是否输入开发板名称")
@@ -1339,8 +1343,8 @@ class Board:
       return self
 
     self.res["begin"](self) #firmata烧录准备
-    major,minor = self.detect_firmata()
     
+    major,minor = self.detect_firmata()
     print("[32] Firmata ID: %d.%d"%(major,minor))
     if (major,minor) != firmware_version[self.boardname]:#burn new firmware
       FIRMATA_MAJOR = firmware_version[self.boardname][0]
@@ -1362,26 +1366,6 @@ class Board:
     return self
   
   def detect_firmata(self):
-  
-    vidpid={
-    "UNO":"2341:0043",
-    "LEONARDO":"3343:8036",
-    "LEONARDO":"2341:8036",
-    "MEGA2560":"2341:0042",
-    "MICROBIT":"0D28:0204",
-    "HANDPY":"10C4:EA60",
-    "HANDPY":"1A86:55D4"       #兼容新版掌控
-    }
-    findboard={
-    "VID:PID=2341:0043":"UNO",
-    "VID:PID=3343:8036":"LEONARDO",
-    "VID:PID=2341:8036":"LEONARDO",
-    "VID:PID=2341:0042":"MEGA2560",
-    "VID:PID=0D28:0204":"MICROBIT",
-    "VID:PID=10C4:EA60":"HANDPY",
-    "VID:PID=1A86:55D4":"HANDPY"
-    }
-    _vidpid = ''''''
     self.duration={
     "UNO": 0.1,
     "LEONARDO": 0.1,
@@ -1392,45 +1376,12 @@ class Board:
     "HANDPY": 0.5,
     "UNIHIKER": 0.1
     }
-    portlist=[]
-    localportlist=[]
     
-    if self.port == None and self.boardname != "":
-      plist = list(serial.tools.list_ports.comports())
-      for port in plist:
-        msg = list(port)
-        if msg[2].find(vidpid[self.boardname]) >= 0:
-          portlist.insert(0,msg)
-          break
-        elif msg[2].find("USB") >= 0:
-          portlist.insert(0,msg)
-        else:
-          localportlist.append(msg)
-        portlist += localportlist
-      if len(portlist) > 0:
-        self.port = portlist[0][0]
-    elif self.boardname == "" and self.port != None:
-      plist = list(serial.tools.list_ports.comports())
-      for port in plist:
-        msg = list(port)
-        if msg[0] == self.port:
-          vidpid = msg[2].split(" ")
-          if len(vidpid) > 2 and vidpid[1] in _vidpid:
-            self.boardname = findboard[vidpid[1]]
-            self.port = msg[0]
-            break
-    else:
-      plist = list(serial.tools.list_ports.comports())
-      for port in plist:
-        msg = list(port)
-        vidpid = msg[2].split(" ")
-        if len(vidpid) > 2 and vidpid[1] in _vidpid:
-          self.boardname = findboard[vidpid[1]]
-          self.port = msg[0]
     print("selected -> board: %s serial: %s"%(self.boardname, self.port))
     if self.port == None:
       return 0,0
     print("[10] Opening "+self.port)
+    
     self.res["reset"]() #复位
     
     self.res["open_serial"](self) #打开串口

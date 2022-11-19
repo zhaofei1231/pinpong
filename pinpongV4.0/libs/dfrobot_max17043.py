@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 import time
 from pinpong.board import gboard,I2C
 import math

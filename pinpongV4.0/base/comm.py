@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
+
+import serial
+import serial.tools.list_ports
+
 PINPONG_MAJOR=0
-PINPONG_MINOR=4
-PINPONG_DELTA=9
+PINPONG_MINOR=5
+PINPONG_DELTA=1
 
 FIRMATA_MAJOR = 2
 FIRMATA_MINOR = 7
@@ -11,9 +15,9 @@ firmware_version = {
   "UNO":(2,7),
   "LEONARDO":(2,7),
   "MEGA2560":(2,7),
-  "MICROBIT":(2,7),
-  "HANDPY":(2,7),
-  "UNIHIKER":(3,3)
+  "MICROBIT":(2,8),
+  "HANDPY":(2,8),
+  "UNIHIKER":(3,6)
 }
 
 def printlogo_big():
@@ -145,3 +149,73 @@ class PinInformation:
   PULL_UP = 2
   PWM     = 0x10
   ANALOG  = 0x11
+  
+
+def find_board(board):
+  vidpid={
+    "UNO":"3343:0043",
+    "LEONARDO":"3343:8036",
+    "LEONARDO":"2341:8036",
+    "MEGA2560":"2341:0042",
+    "MICROBIT":"0D28:0204",
+    "HANDPY":"10C4:EA60",
+    "HANDPY":"1A86:55D4"       #兼容新版掌控
+    }
+  findboard={
+    "VID:PID=3343:0043":"UNO",
+    "VID:PID=3343:8036":"LEONARDO",
+    "VID:PID=2341:8036":"LEONARDO",
+    "VID:PID=2341:0042":"MEGA2560",
+    "VID:PID=0D28:0204":"MICROBIT",
+    "VID:PID=10C4:EA60":"HANDPY",
+    "VID:PID=1A86:55D4":"HANDPY"
+    }
+  _vidpid = '''
+    VID:PID=3343:0043
+    VID:PID=3343:8036
+    VID:PID=2341:8036
+    VID:PID=2341:0042
+    VID:PID=0D28:0204
+    VID:PID=10C4:EA60
+    VID:PID=1A86:55D4
+    '''
+  
+  portlist=[]
+  localportlist=[]
+  
+  if board.boardname == "RPI":
+      return 
+  elif board.boardname == "UNIHIKER":
+      board.port = "/dev/ttyS3"
+  if board.port == None and board.boardname != "":
+    plist = list(serial.tools.list_ports.comports())
+    for port in plist:
+      msg = list(port)
+      if msg[2].find(vidpid[board.boardname]) >= 0:
+        portlist.insert(0,msg)
+        break
+      elif msg[2].find("USB") >= 0:
+        portlist.insert(0,msg)
+      else:
+        localportlist.append(msg)
+      portlist += localportlist
+    if len(portlist) > 0:
+      board.port = portlist[0][0]
+  elif board.boardname == "" and board.port != None:
+    plist = list(serial.tools.list_ports.comports())
+    for port in plist:
+      msg = list(port)
+      if msg[0] == port:
+        vidpid = msg[2].split(" ")
+        if len(vidpid) > 2 and vidpid[1] in _vidpid:
+          board.boardname = findboard[vidpid[1]]
+          board.port = msg[0]
+          break
+  else:
+    plist = list(serial.tools.list_ports.comports())
+    for port in plist:
+      msg = list(port)
+      vidpid = msg[2].split(" ")
+      if len(vidpid) > 2 and vidpid[1] in _vidpid:
+        board.boardname = findboard[vidpid[1]]
+        board.port = msg[0]

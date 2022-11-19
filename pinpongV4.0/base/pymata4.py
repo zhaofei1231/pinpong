@@ -2629,6 +2629,8 @@ class Pymata4(threading.Thread):
                 self.microbit_callback(temp)
         
         elif data[0] == PrivateConstants.SUB_MESSAGE_DFROBOT_GD32V_REPORTS:
+            if len(data)<23:
+                return
             last_valueA = self.GD32V_buttonA
             last_valueB = self.GD32V_buttonB
             self.GD32V_buttonA = data[1]

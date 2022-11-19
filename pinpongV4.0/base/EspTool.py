@@ -2365,7 +2365,7 @@ def esp_burn(port,baudrate,filename):
     args.trace = False
     args.addr_filename=[]
     #0xe000 boot_app0.bin
-    filepath = filename.rstrip('FirmataExpress.HANDPY.2.7.bin')   #解python strip本身的bug
+    filepath = filename.rstrip('FirmataExpress.HANDPY.2.8.bin')   #解python strip本身的bug
     args.addr_filename.append((0xe000,open(filepath+"boot_app0.bin","rb")))
     #0x1000 bootloader_dio_80m.bin
     args.addr_filename.append((0x1000,open(filepath+"bootloader_dio_80m.bin","rb")))

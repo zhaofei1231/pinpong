@@ -222,8 +222,11 @@ class GD32_buzz:
                     print(_note)
                     print(_beat)
                     self.board.board.GD32V_play_note(_note, _beat)
+                    out = time.time()
                     while not self.board.board.GD32V_get_state():
-                        pass
+                      if int(time.time()-out)>0.31:
+                        break
+                      pass
             elif isinstance(_freq, str):
                 note = _freq.upper()
                 info = note.split(':')

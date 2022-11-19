@@ -101,7 +101,7 @@ class LCD1602_I2C:
         self.y = 1-self.y
       self.set_data(ch)
 
-  def printf(self, s):
+  def print(self, s):
     if(isinstance(s,int)):
       s=str(s)
     if len(s)>0:

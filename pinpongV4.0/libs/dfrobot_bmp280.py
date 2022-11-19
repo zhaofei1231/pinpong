@@ -43,7 +43,7 @@ class BMP280:
   
   BMP280_REG_CHIP_ID_DEFAULT     = 0x58
   
-  def __init__(self, board=None, i2c_addr= 0x76, bus_num=0, mode=0):
+  def __init__(self, board=None, i2c_addr= 0x77, bus_num=0, mode=1):
     if isinstance(board, int):
       i2c_addr = board
       board = gboard
@@ -77,10 +77,15 @@ class BMP280:
     else:
       return False
     time.sleep(0.1)
+    self.seaLevelPressure = self.read_sea_level(525)
     return True
   
-  def altitude_m(self, pressure, seaLevelPressure = 1015.0):
-    return 44330 * (1.0 - math.pow(pressure / 100 / seaLevelPressure, 0.1903))
+  def read_sea_level(self, altitude):
+    pressure = self.pressure_p()
+    return (pressure / math.pow(1.0 - (altitude / 44330.0), 5.255))
+  
+  def altitude_m(self, pressure):
+    return (1.0 - math.pow(pressure / self.seaLevelPressure, 0.190284)) * 287.15 / 0.0065
 
   def pressure_p(self):
     self.temp_c()

@@ -104,8 +104,7 @@ def find_port(board):
       retry = retry - 1
       port_list_2 = list(serial.tools.list_ports.comports())
       port_list_2 = [list(x) for x in port_list_2]
-      print("port_list_2", port_list_2)
-      print("port_list_0", port_list_0)
+
       for p in port_list_2:
         if p not in port_list_0:
           port = p

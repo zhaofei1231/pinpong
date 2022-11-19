@@ -187,7 +187,7 @@ class ID809():
         data[0] = mode
         data[1] = color
         data[2] = color
-        data[2] = blinkCount
+        data[3] = blinkCount
         header = self.__pack(self.CMD_TYPE, self.CMD_SLED_CTRL, data, 4)
         self.__send_packet(header)
         if self.ISIIC == True:
@@ -249,7 +249,7 @@ class ID809():
 
     def set_baudrate(self, baudrate=5):
         if self.ISIIC == True:
-            retrun
+            return
     
     def set_moduleSN(self, val):
         data = [0,0]
@@ -356,6 +356,35 @@ class ID809():
             time.sleep(0.36)
         ret = self.__response_payload()
         return ret
+
+    def get_status_ID(self, id):
+        data = [0,0]
+        data[0] = id
+        header = self.__pack(self.CMD_TYPE, self.CMD_GET_STATUS, data, 2)
+        self.__send_packet(header)
+        if self.ISIIC == True:
+            time.sleep(0.36)
+        ret = self.__response_payload()
+        if ret == self.ERR_SUCCESS:
+            ret =  self.buf[0]
+        return ret
+
+    def verify(self, id):
+        if self._state == 1:
+            data = [0,0,0,0]
+            data[0] = id
+            self._number = 0
+            header = self.__pack(self.CMD_TYPE, self.CMD_VERIFY, data, 4)
+            self.__send_packet(header)
+            if self.ISIIC == True:
+                time.sleep(0.36)
+            ret = self.__response_payload()
+            if ret == self.ERR_SUCCESS:
+                ret = True
+            else:
+                ret = False
+            return ret
+        return False
     
     def search(self):
         if self._state == 1:

@@ -308,13 +308,11 @@ class BMI160():
 
     def __init__(self, board = None, i2c_addr = 0x69, bus_num=0):
         if isinstance(board, int):
-            
             i2c_addr = board
             board = gboard
         elif board == None:
             board = gboard
         self.i2c_addr = i2c_addr
-    
         self._i2c = I2C(bus_num)
         
         self.prevAccelCfg_power = 0
@@ -322,8 +320,7 @@ class BMI160():
 
     def begin(self, types, addr = 0x69):
         self.i2c_init(addr)
-        #if types == self.step:
-        if types == 1:    
+        if types == self.step:
             self.setInt(2)
             self.setStepCounter()
             self.setStepPowerMode(self.stepNormalPowerMode)

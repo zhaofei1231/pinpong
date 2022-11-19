@@ -8,13 +8,25 @@ algorthimsByteID = {
     "ALGORITHM_LINE_TRACKING": [0x03,0x00],
     "ALGORITHM_COLOR_RECOGNITION": [0x04,0x00],
     "ALGORITHM_TAG_RECOGNITION": [0x05,0x00],
-    "ALGORITHM_OBJECT_CLASSIFICATION": [0x06,0x00]
+    "ALGORITHM_OBJECT_CLASSIFICATION": [0x06,0x00],
+    "ALGORITHM_QR_RECOGNITION": [0x07,0x00],
+    "ALGORITHM_BARCODE_RECOGNITION": [0x08,0x00]
 }
 
+class Parameter:
+    xCenter = 0
+    yCenter = 1
+    width = 2
+    height = 3
+
+    xOrigin = 0
+    yOrigin = 1
+    xTarget = 2
+    yTarget = 3
+
+    id = 4
+
 class Huskylens:
-
-
-
 
     #command
     COMMAND_REQUEST = 0x20
@@ -48,7 +60,7 @@ class Huskylens:
 
 
     commandHeaderAndAddress = [0x55,0xAA,0x11]
-
+    valid_data = [0, 0, []]
 
     HEADER_0_INDEX   =   0
     HEADER_1_INDEX   =   1
@@ -78,7 +90,8 @@ class Huskylens:
         total = 0        
         for i in cmd:            
             total += i        
-        return bytearray.fromhex('{:0192x}'.format(total))[-1]
+        return total % 256
+		#return bytearray.fromhex('{:0192x}'.format(total))[-1]
 
     def _splitCommandToParts(self, dataArray):
         headers = dataArray[0:2]
@@ -86,7 +99,7 @@ class Huskylens:
         data_length = dataArray[3]
         command = dataArray[4]
         if(data_length > 0):
-            data = dataArray[5:-2]
+            data = dataArray[5:-1]
         else:
             data = []
         checkSum = dataArray[-1]
@@ -102,7 +115,7 @@ class Huskylens:
             return "KNOCK RECEIVED"
         else:
             numberOfBlocksOrArrow = commandSplit[4][0]
-            print("number of objects detected:", numberOfBlocksOrArrow)
+            # print("number of objects detected:", numberOfBlocksOrArrow)
             if(commandSplit[4][1] > 0):
                 numberOfBlocksOrArrow = 255+commandSplit[4][1]
             for i in range(numberOfBlocksOrArrow):
@@ -120,9 +133,9 @@ class Huskylens:
                 for i in range(0,len(q)-1,2):
                     val=q[i]
                     if(q[i+1]>0):
-                        val=255+q[i+1]
+                        val=256+q[i+1]
                     data.append(val)
-                data.append(q[-1])
+                #data.append(q[-1])
             return data
 
     def _read_response(self):
@@ -151,10 +164,15 @@ class Huskylens:
  
     def _processReturnData(self):
         resonseData = self._read_response()
-        #print("_processReturnData: ", resonseData)
+        # print("_processReturnData: ", resonseData)
+        self.valid_data[0] = resonseData[5] + resonseData[6]*256
+        self.valid_data[1] = resonseData[7] + resonseData[8]*256
+        
         parsed_data = self._parseResponse(resonseData)
-
-        return self._dataProcess(parsed_data)
+        # print(parsed_data)
+        self.valid_data[2] = self._dataProcess(parsed_data)
+        # print("valid_data: ", self.valid_data)
+        return self.valid_data[2]
 
     #write the command to huskylens
     def _write_to_huskyLens(self, command):
@@ -330,10 +348,10 @@ class Huskylens:
             #process return
         else:
             print("INCORRECT ALGORITHIM NAME")
-            
 
     def command_request_custom_text(self, text,x,y):
-
+        if x > 319 or x < 0 or y > 239 or y < 0:
+           return None
         textLength = len(text)
         dataLength = textLength+4
         cmd = self.commandHeaderAndAddress[:] #[0x55,0xAA,0x11] [85, 170, 17]
@@ -375,7 +393,8 @@ class Huskylens:
 
 
     def command_request_customnames(self, id, name):
-
+        if id <= 0:
+            return None
         nameLength = len(name)
         dataLength = nameLength+3
 
@@ -404,6 +423,8 @@ class Huskylens:
         self._write_to_huskyLens(cmd)
 
     def command_request_learn_once(self,id):
+        if id <= 0:
+            return None
         cmd = self.commandHeaderAndAddress[:] #[0x55,0xAA,0x11] [85, 170, 17]
         dataLength = 2
         cmd.append(dataLength)
@@ -450,3 +471,77 @@ class Huskylens:
         self._write_to_huskyLens(cmd)
 
 
+
+
+# *****************************************************************************************
+
+    def select_blocks_arrows(self, Huskylens_type):      
+        if Huskylens_type == "blocks":
+            self.command_request_blocks()
+        elif Huskylens_type == "arrows":
+            self.command_request_arrows()
+        else:
+            self.command_request_arrows()
+    
+    def read_learned_id_count(self):
+        return self.valid_data[1]
+
+    def is_appear_direct(self, Huskylens_type):
+        self.select_blocks_arrows(Huskylens_type)
+        return True if self.valid_data[0] else False
+
+    def is_learned(self, id):
+        return True if (id <= self.valid_data[1] and id >= 0) else False
+  
+    def is_appear(self, id, Huskylens_type):
+        self.select_blocks_arrows(Huskylens_type)
+        id_list = self.valid_data[2][4:len(self.valid_data[2]):5]
+        return True if id in id_list else False
+        
+    def read_count(self, Huskylens_type, id=None):
+        self.select_blocks_arrows(Huskylens_type)
+        if id is None:
+            return int(len(self.valid_data[2])/5)
+        id_list = self.valid_data[2][4:len(self.valid_data[2]):5]
+        return id_list.count(id)
+    
+    def read_blocks_arrows_parameter_direct(self, parameter, Huskylens_type, index):
+        self.select_blocks_arrows(Huskylens_type)
+        if len(self.valid_data[2])==0 or len(self.valid_data[2])/5 < index or index <= 0:
+            return -1
+        return self.valid_data[2][(index-1)*5:index*5][parameter]
+     
+    def read_blocks_arrows_parameter(self, id, parameter, Huskylens_type):
+        self.select_blocks_arrows(Huskylens_type)
+        index = int(len(self.valid_data[2])/5)
+        if index == 0:
+            return -1
+        para_list = []
+        for i in range(index):
+            para_list.append(self.valid_data[2][i*5:(i+1)*5])
+        id_list = []
+        for x in para_list:
+            if x[4] == id[0]:
+                id_list.append(x)
+        if len(id_list)==0 or id[1] > len(id_list) or id[1]==0:
+            return -1
+        return id_list[id[1]-1][parameter]
+        
+    def read_block_center_parameter_direct(self, parameter, Huskylens_type):
+        self.select_blocks_arrows(Huskylens_type)
+        index = int(len(self.valid_data[2])/5)
+        if index == 0:
+            return -1
+        para_list = []
+        for i in range(index):
+            para_list.append(self.valid_data[2][i*5:(i+1)*5])
+        distance_min = 2147483647
+        for p in para_list:
+            if Huskylens_type == "blocks":
+                distance = (p[0] - 320 / 2)**2 + (p[1] - 240 / 2)**2
+            elif Huskylens_type == "arrows":
+                distance = ((p[0]+p[2])/2 - 320 / 2)**2 + ((p[1]+p[3])/2 - 240 / 2)**2
+            if distance < distance_min:
+                distance_min = distance
+                distance_min_index = para_list.index(p)
+        return para_list[distance_min_index][parameter]

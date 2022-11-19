@@ -186,7 +186,7 @@ class MCP4725():
         maxV = int(amp*(4096/self._refVoltage))
         if freq > 100:
             num = 16
-        elif freq >= 50 and frea <= 100:
+        elif freq >= 50 and freq <= 100:
             num = 32
         else:
             num = 64
@@ -256,7 +256,6 @@ class MCP4725():
             else:
                 data = ((self.DACLookup_FullSine_5Bit[i] - 2047) * (amp / self._refVoltage)) * 2
             data = data + (offset*(4096/self._refVoltage))
-#            print(data)
             if data < 0:
                 data = 0
             if data > 4095:

@@ -7,7 +7,7 @@ import time
 from pinpong.base import pymata4
 from pinpong.base.comm import *
 from pinpong.extension.globalvar import *
-from pinpong.extension.comm import *
+
 
 uno_res = {
     "i2c" : {
@@ -25,7 +25,7 @@ uno_res = {
     "pin" : {
         "pinnum" : [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
         "dpin" : [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
-        "apin" : [2,3,4,5],
+        "apin" : [0,1,2,3,4,5],
         "type" : "firmata",
         "class" : "DuinoPin",
         "write_analog" : "firmata"        
@@ -43,24 +43,24 @@ uno_res = {
     "tone" : {
         "type" : "firmata",
         "class" : "DuinoTone" ,
-        "pininvalid" : []
+        "pininvalid" : [0,1]
         },
     "dht11" : {
         "type" : "firmata",
-        "pininvalid" : [0,1]
+        "pininvalid" : [0,1,14,15,16,17,18,19]
         },
     "dht22" : {
         "type" : "firmata", 
-        "pininvalid" : [0,1]
+        "pininvalid" : [0,1,14,15,16,17,18,19]
         },
     "servo" : {
         "type" : "firmata",
         "class" : "DuinoServo",
-        "pininvalid" : [0,1]
+        "pininvalid" : [0,1,16,17,18,19]
         },
     "irrecv" : {
         "class" : "DuinoIRRecv",
-        "pininvalid" : [0,1,4,5,6,7,8,9,10,11,12,13]
+        "pininvalid" : [0,1,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
         },
     "irremote" : {
         "class" : "DuinoIRRemote",
@@ -106,15 +106,16 @@ def find_port(board):
   pass
 
 def get_pin(vpin):
+
   dpin = vpin if vpin<20 else (vpin-100+14) if vpin >= 100 else -1
   apin = vpin-100 if vpin >= 100 else -1
   if vpin < 100:
     if dpin not in uno_res["pin"]["dpin"]:
-      raise ValueError("UNO不支持该数字引脚%d"%vpin, "支持数字引脚",uno_res["pin"]["dpin"])
+      raise ValueError("UNO不支持该数字引脚D%d"%vpin, "支持数字引脚",uno_res["pin"]["dpin"])
      
   else:
     if apin not in uno_res["pin"]["apin"]:
-      raise ValueError("UNO不支持该模拟引脚%d"%vpin, "支持模拟引脚",uno_res["pin"]["apin"])
+      raise ValueError("UNO不支持该模拟引脚A%d"%vpin, "支持模拟引脚",uno_res["pin"]["apin"])
 
   return dpin,apin
   
