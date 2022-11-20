@@ -56,62 +56,38 @@ class NeoPixelExtension(object):
   def clear(self):
     self.board.board.neopixel_set_range_color(self.pin_obj.pin, 0, self.num-1, 0)
 
-class DHT11Extension:
-  def __init__(self,board=None, pin_obj=None):
+class DHTExtension:
+  def __init__(self,board=None, pin_obj=None, num=0):
     print("依赖")
     self.board = board
     self.pin_obj = pin_obj
-    if pin_obj.pin in board.res["dht11"]["pininvalid"]:
-      raise ValueError("dht11不支持该引脚%d"%pin_obj.pin, "不支持引脚名单",board.res["dht11"]["pininvalid"])
-    self.type = 11
+    self.key = "dht%d"%num 
+    if pin_obj.pin in board.res[self.key]["pininvalid"]:
+      raise ValueError(self.key+"不支持该引脚%d"%pin_obj.pin, "不支持引脚名单",board.res[self.key]["pininvalid"])
+    self.type = num
     self.board.board.set_pin_mode_dht(self.pin_obj.pin, self.type, differential=.01)
     time.sleep(1.2) #防止用户层读出数据为0
     
   def measure(self):
     
-    if self.board.res["dht11"]["type"] == "dfrobot_firmata":
+    if self.board.res[self.key]["type"] == "dfrobot_firmata":
       self.board.board.dfrobot_dht_read(self.pin_obj.pin, self.type)
     self.value = self.board.board.dht_read(self.pin_obj.pin)
 
   def temp_c(self):
-    if self.board.res["dht11"]["type"] == "dfrobot_firmata":
+    if self.board.res[self.key]["type"] == "dfrobot_firmata":
       self.board.board.dfrobot_dht_read(self.pin_obj.pin, self.type)
     return self.board.board.dht_read(self.pin_obj.pin)[1]
 
   def humidity(self):
-    if self.board.res["dht11"]["type"] == "dfrobot_firmata":
+    if self.board.res[self.key]["type"] == "dfrobot_firmata":
       self.board.board.dfrobot_dht_read(self.pin_obj.pin, self.type)
     return self.board.board.dht_read(self.pin_obj.pin)[0]
 
-class DHT22Extension:
-  def __init__(self,board=None, pin_obj=None):
-    print("依赖")
-    self.board = board
-    self.pin_obj = pin_obj
-    if pin_obj.pin in board.res["dht22"]["pininvalid"]:
-      raise ValueError("dht22不支持该引脚%d"%pin_obj.pin, "不支持引脚名单",board.res["dht22"]["pininvalid"])
-    self.type = 22
-    self.board.board.set_pin_mode_dht(self.pin_obj.pin, self.type, differential=.01)
-    time.sleep(1.2) #防止用户层读出数据为0
-
-  def measure(self):
-    if self.board.res["dht22"]["type"] == "dfrobot_firmata":
-      self.board.board.dfrobot_dht_read(self.pin_obj.pin, self.type)
-    self.value = self.board.board.dht_read(self.pin_obj.pin)
-
-  def temp_c(self):
-    if self.board.res["dht22"]["type"] == "dfrobot_firmata":
-      self.board.board.dfrobot_dht_read(self.pin_obj.pin, self.type)
-    return self.board.board.dht_read(self.pin_obj.pin)[1]
-
-  def humidity(self):
-    if self.board.res["dht22"]["type"] == "dfrobot_firmata":
-      self.board.board.dfrobot_dht_read(self.pin_obj.pin, self.type)
-    return self.board.board.dht_read(self.pin_obj.pin)[0]
 
 class SR04_URM10Extension:
   def __init__(self,board=None, trigger_pin_obj=None, echo_pin_obj=None):
-    print("依赖")
+    print("依赖")                      
     self.board  = board
     self.trigger_pin_obj = trigger_pin_obj
     self.echo_pin_obj = echo_pin_obj

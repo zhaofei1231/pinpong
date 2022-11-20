@@ -420,7 +420,7 @@ class DuinoPWM:
   def deinit(self):
     self.board.pin_obj.pin_mode(Pin.IN)
 
-class RpiPWM:
+class RPiPWM:
   def __init__(self, board, pin_obj):
     self.pin_obj = pin_obj
     self.freq_value = 100
@@ -618,7 +618,7 @@ class SoftSPI:
       data <<= 1
     return ret
 
-class RPiSPI:
+class LinuxSPI:
   def __init__(self, bus_num=0, device_num=0, baudrate=31200000):
     self.spi = spidev.SpiDev(bus_num, device_num)
     self.spi.open(bus_num, device_num)
@@ -851,6 +851,7 @@ class DuinoUART:
 
 class UART:
   def __init__(self, board=None, tty_name="", bus_num=1, baud_rate=9600):
+    
     if isinstance(board, str):
       baud_rate = bus_num
       bus_num = tty_name
@@ -862,17 +863,15 @@ class UART:
     elif board == None:
       board = gboard
     self.board = board
-    print(self.board)
+    self.uart_num = bus_num if tty_name == "" else tty_name
+
     if self.board.uart[bus_num] == None:
       self.bus_num = bus_num
-    if self.board.res["uart"]["class"] == "TTYUART":
-      if tty_name not in board.res["uart"]["busnum"]:
-        raise ValueError("uart不支持该设备%s"%tty_name, "支持",board.res["uart"]["busnum"])
-      self.board.uart[bus_num] = TTYUART(board, tty_name, baud_rate)
-    else:
-      if bus_num not in board.res["uart"]["busnum"]:
-        raise ValueError("uart不支持该设备%d"%bus_num, "支持",board.res["uart"]["busnum"])
-      self.board.uart[bus_num] = DuinoUART(board, bus_num, baud_rate)
+    
+    if self.uart_num not in board.res["uart"]["busnum"]:
+      raise ValueError("uart不支持该设备%s"%(str(self.uart_num)), "支持",board.res["uart"]["busnum"])
+    self.board.uart[bus_num] = eval(self.board.res["uart"]["class"]+"(board, self.uart_num, baud_rate)")
+    
     self.obj = self.board.uart[bus_num]
 
   def deinit(self):
@@ -913,7 +912,7 @@ class ModBus:
         self.master = modbus[port.upper()]
       else:
         ser = serial.Serial(port=port,baudrate=9600, bytesize=8, parity='N', stopbits=1)
-        master.set_timeout(1.0)
+        #self.master.set_timeout(1.0)
         self.master = modbus_rtu.RtuMaster(ser)
         self.ser = ser
         self.board.modbus[port.upper()] = self.master
@@ -1045,7 +1044,7 @@ class IRRemote:
   def send(self, value):
     return self.obj.send(value)
 
-class RpiTone:
+class RPiTone:
   def __init__(self, board, pin_obj):
     self.board = board
     self.pwm = PWM(pin_obj = pin_obj)
@@ -1236,23 +1235,23 @@ class NeoPixel(NeoPixelExtension):
       board = gboard
     NeoPixelExtension.__init__(self, board, pin_obj, num)
 
-class DHT11(DHT11Extension):
-  def __init__(self,board=None, pin_obj=None): 
+class DHT11(DHTExtension):
+  def __init__(self,board=None, pin_obj=None, num=11): 
     if isinstance(board, Pin):
       pin_obj = board
       board = gboard
     elif board == None:
       board = gboard
-    DHT11Extension.__init__(self, board, pin_obj)
+    DHTExtension.__init__(self, board, pin_obj, num)
 
-class DHT22(DHT11Extension):
-  def __init__(self,board=None, pin_obj=None): 
+class DHT22(DHTExtension):
+  def __init__(self,board=None, pin_obj=None, num=22): 
     if isinstance(board, Pin):
       pin_obj = board
       board = gboard
     elif board == None:
       board = gboard
-    DHT22Extension.__init__(self, board, pin_obj)
+    DHTExtension.__init__(self, board, pin_obj, num)
 
 class SR04_URM10(SR04_URM10Extension):
   def __init__(self,board=None, trigger_pin_obj=None, echo_pin_obj=None):
@@ -1369,10 +1368,8 @@ class Board:
     self.duration={
     "UNO": 0.1,
     "LEONARDO": 0.1,
-    "LEONARDO": 0.1,
     "MEGA2560":0.5,
     "MICROBIT": 0.5,
-    "HANDPY": 0.5,
     "HANDPY": 0.5,
     "UNIHIKER": 0.1
     }
@@ -1390,13 +1387,11 @@ class Board:
     buf=bytearray(b"\xf0\x79\xf7")
     self.serial.write(buf)
     res = self.serial.read(5)
-    major=0
-    minor=0
+    major,minor=0,0
     
     if len(res) >=3 and res[0] == 0xF0 and res[1] == 0x79:
-      major = res[2]
-      minor = res[3]
-   
+      major,minor = res[2],res[3]
+      
     if (major,minor) == (FIRMATA_MAJOR,FIRMATA_MINOR):
    
       self.res["soft_reset"](self)

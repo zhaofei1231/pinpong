@@ -10,8 +10,8 @@ Board("").begin()  #初始化，选择板型和端口号，不输入端口号则
 #Board("uno","/dev/ttyACM0").begin()   #linux下指定端口初始化
 #Board("uno","/dev/cu.usbmodem14101").begin()   #mac下指定端口初始化
 
-dht11 = DHT11(Pin(Pin.D19))
-dht22 = DHT22(Pin(Pin.D15))
+dht11 = DHT11(Pin(Pin.D3))
+dht22 = DHT22(Pin(Pin.D9))
 
 while True:
   temp = dht11.temp_c() #读取摄氏温度

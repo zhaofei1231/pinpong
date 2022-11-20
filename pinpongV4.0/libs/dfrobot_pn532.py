@@ -372,13 +372,13 @@ class RETVAL():
     self.num_block = 0
 
 class PN532_UART(PN532):
-  def __init__(self,board = None, tty_name="/dev/ttyS5"):
+  def __init__(self,board = None, tty_name="", bus_num=1):
     if isinstance(board, str):
       tty_name  = board
       board     = gboard
     elif board is None:
       board    = gboard
-    self.uart  = UART(tty_name = tty_name, baud_rate = 115200)
+    self.uart  = UART(tty_name = tty_name, bus_num=bus_num, baud_rate = 115200)
 
     super().__init__()
 

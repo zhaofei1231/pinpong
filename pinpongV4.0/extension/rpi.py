@@ -18,7 +18,7 @@ rpi_res = {
         },
     "spi" : {
         "busnum" : [(0,0),(0,1)],
-        "class" : "RPiSPI"
+        "class" : "LinuxSPI"
         },
     "uart" : {
         "busnum" : ["/dev/ttyS0", "/dev/ttyAMA0", "/dev/ttyUSB0"],
