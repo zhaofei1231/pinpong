@@ -183,7 +183,7 @@ def find_board(board):
   portlist=[]
   localportlist=[]
   
-  if board.boardname == "RPI":
+  if board.connected == True:
       return 
   elif board.boardname == "UNIHIKER":
       board.port = "/dev/ttyS3"
@@ -216,6 +216,8 @@ def find_board(board):
     for port in plist:
       msg = list(port)
       vidpid = msg[2].split(" ")
+      
       if len(vidpid) > 2 and vidpid[1] in _vidpid:
         board.boardname = findboard[vidpid[1]]
         board.port = msg[0]
+        

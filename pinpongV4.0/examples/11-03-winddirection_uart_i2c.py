@@ -13,4 +13,5 @@ wx.modify_address(0, 2)
 
 while True:
     print(wx.read_wind_direction())
+    print(wx.get_wind_angle())          #V2才有读取角度
     time.sleep(0.3)

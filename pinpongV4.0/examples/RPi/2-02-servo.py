@@ -7,7 +7,7 @@ import time
 from pinpong.board import Board,Pin,Servo
 
 Board("RPi").begin()
-s1 = Servo(Pin(26)) #将Pin传入Servo中初始化舵机引脚
+s1 = Servo(Pin(21)) #将Pin传入Servo中初始化舵机引脚
 
 while True:
   s1.write_angle(0) #控制舵机转到0度位置

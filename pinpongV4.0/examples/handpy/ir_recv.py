@@ -15,12 +15,12 @@ def ir_recv3(data):
   print("------P0--------")
   print(hex(data))
 
-ir2 = IRRecv(Pin(0))
-#ir3 = IRRecv(Pin(1),ir_recv3)
+#ir2 = IRRecv(Pin(0))
+ir3 = IRRecv(Pin(0),ir_recv3)
 
 while(1):
-  v = ir2.read()
-  if v:
-   print("------P2--------")
-   print(hex(v))
-   time.sleep(0.1)
+#  v = ir2.read()
+#  if v:
+#   print("------P2--------")
+#   print(hex(v))
+  time.sleep(0.1)

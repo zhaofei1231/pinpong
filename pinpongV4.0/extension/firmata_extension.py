@@ -7,7 +7,7 @@ from pinpong.extension.globalvar import *
 
 class NeoPixelExtension(object):
   def __init__(self, board=None, pin_obj=None, num=None):
-    print("依赖")
+    
     self.pin_obj  = pin_obj
     self.board = board
     self.num = num
@@ -58,7 +58,7 @@ class NeoPixelExtension(object):
 
 class DHTExtension:
   def __init__(self,board=None, pin_obj=None, num=0):
-    print("依赖")
+    
     self.board = board
     self.pin_obj = pin_obj
     self.key = "dht%d"%num 
@@ -87,7 +87,7 @@ class DHTExtension:
 
 class SR04_URM10Extension:
   def __init__(self,board=None, trigger_pin_obj=None, echo_pin_obj=None):
-    print("依赖")                      
+                          
     self.board  = board
     self.trigger_pin_obj = trigger_pin_obj
     self.echo_pin_obj = echo_pin_obj
@@ -104,7 +104,7 @@ class SR04_URM10Extension:
 
 class DS18B20Extension:
   def __init__(self, board=None, pin_obj=None):
-    print("依赖")
+    
     self.board = board
     self.pin_obj = pin_obj
     self.board.board.set_pin_mode_DS18B20(self.pin_obj.pin)
@@ -114,7 +114,7 @@ class DS18B20Extension:
 
 class GP2Y1010AU0FExtension: #空气质量粉尘传感器 仅unihiker
   def __init__(self, board=None, anapin=None, digpin=None):
-    print("依赖")
+   
     self.board = board
     self.anapin = anapin
     self.digpin = digpin
@@ -131,7 +131,7 @@ class GP2Y1010AU0FExtension: #空气质量粉尘传感器 仅unihiker
 
 class AudioAnalyzerExtension:
   def __init__(self, board=None, strobe_pin=None, RST_pin=None, DC_pin=None):
-    print("依赖")
+    
     self.board = board
     self.strobe_pin = strobe_pin
     self.RST_pin = RST_pin
@@ -148,7 +148,7 @@ class AudioAnalyzerExtension:
 
 class HX711Extension:
   def __init__(self, board, dout_pin, sck_pin = 2121, scale = None):
-    print("依赖")
+    
     self.board = board
     self.dout_pin = dout_pin
     self.sck_pin = sck_pin

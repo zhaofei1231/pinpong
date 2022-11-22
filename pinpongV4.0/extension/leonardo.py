@@ -83,6 +83,9 @@ def init(board, boardname, port):
 
 def begin(board):
     printlogo_big()
+    version = sys.version.split(' ')[0]
+    name = platform.platform()
+    print("[01] Python"+version+" "+name+(" " if board.boardname == "" else " Board: "+ board.boardname))
     leo_res["firmware"] = ["/base/FirmataExpress.LEONARDO.", ".hex"]
 
 #复位板子
@@ -108,7 +111,7 @@ def find_port(board):
       for p in port_list_2:
         if p not in port_list_0:
           port = p
-          print("port = ", port)
+          
           break
       if port == None:
         time.sleep(0.5)
@@ -126,7 +129,7 @@ def open_serial(board):
 def soft_reset(board):
   pass
 
-def get_pin(vpin):
+def get_pin(board,vpin):
   dpin = vpin if vpin<20 else (vpin-100+14) if vpin >= 100 else -1
   apin = vpin-100 if vpin >= 100 else -1
   if vpin < 100:

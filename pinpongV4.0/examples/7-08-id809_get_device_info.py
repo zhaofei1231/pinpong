@@ -3,7 +3,7 @@ import time
 from pinpong.board import Board,Pin
 from pinpong.libs.dfrobot_id809 import ID809
 
-Board("uno").begin()#初始化，选择板型和端口号，不输入端口号则进行自动识别
+Board().begin()#初始化，选择板型和端口号，不输入端口号则进行自动识别
 #Board("uno","COM36").begin()  #windows下指定端口初始化
 #Board("uno","/dev/ttyACM0").begin()   #linux下指定端口初始化
 #Board("uno","/dev/cu.usbmodem14101").begin()   #mac下指定端口初始化
@@ -17,7 +17,7 @@ while fingerprint.connected() == False:
 while True:
     print("-------------------------")
 #    fingerprint.set_deviceID(1)         #设置模块ID, 不设置默认为1, 可设置0-255
-    print("模块ID为:: {}".format(fingerprint.get_deviceID()))          #获取模块ID
+    print("模块ID为: {}".format(fingerprint.get_deviceID()))          #获取模块ID
 #    fingerprint.set_security_level(3)     #设置安全等级, 默认为3, 可设置1-5
     print("模块安全等级为: {}".format(fingerprint.get_security_level()))    #获取安全等级
 ##    9600bps    19200bps   38400bps   57600bps   115200bps
@@ -28,7 +28,7 @@ while True:
 #    fingerprint.set_moduleSN("DFRobot")            #设置模块序列号
     print("模块序列号为: {}".format(fingerprint.get_moduleSN()))   #读取模块序列号
     print("模块内部已注册指纹数量: {}".format(fingerprint.get_enroll_count()))          #读取模块内已注册的指纹数量
-    info = fingerprint.get_enrolledID_list()
-    print("已注册用户ID列表:", info)
+    # info = fingerprint.get_enrolledID_list()
+    # print("已注册用户ID列表:", info)
     print("指纹损坏数量: {}".format(fingerprint.get_broken_quantity()))           #获取指纹损坏数量
 #    fingerprint.get_brokenID()                                                    #获取第一个损坏的ID

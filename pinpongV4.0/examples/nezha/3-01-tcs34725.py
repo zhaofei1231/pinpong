@@ -8,7 +8,7 @@ from pinpong.libs.dfrobot_tcs34725 import TCS34725 #从libs导入tcs34725库
 
 Board("nezha").begin()  #初始化，选择板型和端口号，不输入端口号则进行自动识别
 
-tcs = TCS34725() #传感器初始化
+tcs = TCS34725(bus_num=2) #传感器初始化
 
 print("Color View Test!")
 while True: 

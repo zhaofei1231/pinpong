@@ -14,4 +14,5 @@ w.modify_address(0, 2)
 
 while True:
     print(w.read_wind_direction())
+    print(w.get_wind_angle())          #V2才有读取角度
     time.sleep(1)

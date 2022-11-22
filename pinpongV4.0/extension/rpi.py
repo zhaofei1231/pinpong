@@ -22,18 +22,18 @@ rpi_res = {
         },
     "uart" : {
         "busnum" : ["/dev/ttyS0", "/dev/ttyAMA0", "/dev/ttyUSB0"],
-        "class" : "TTYUART",           
+        "class" : "TTYUART"         
         },
     "pin" : {
         "pinnum" : [4,5,6,12,13,16,17,18,19,20,21,22,23,24,25,26,27],    
-        "class" : "RPiPin",         
+        "class" : "RPiPin"        
         },
     "pwm" : {
-        "class" : "RPiPWM",
         "pinpwm" : [4,5,6,12,13,16,17,18,19,20,21,22,23,24,25,26,27],
+        "class" : "RPiPWM"
         },
     "tone" : {       
-        "class" : "RPiTone",
+        "class" : "LinuxTone",
         "pininvalid" : []
         }, 
     "servo" : {        
@@ -58,8 +58,8 @@ rpi_res = {
 def begin(board):
   printlogo_big()
   version = sys.version.split(' ')[0]
-  plat = platform.platform()
-  print("[01] Python"+version+" "+plat+(" " if board.boardname == "" else " Board: "+ board.boardname))
+  name = platform.platform()
+  print("[01] Python"+version+" "+name+(" " if board.boardname == "" else " Board: "+ board.boardname))
   
 def init(board, boardname, port):
   GPIO.setmode(GPIO.BCM)

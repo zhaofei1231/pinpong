@@ -12,8 +12,8 @@ Board("uno").begin()#初始化，选择板型和端口号，不输入端口号�
 
 DIGITAL_MODE = 1
 ANALOG_MODE = 0
-#heart_rate = HEARTRATE(ANALOG_MODE, Pin.A1)    # ANALOG_MODE or DIGITAL_MODE 方式
-heart_rate = HEARTRATE(DIGITAL_MODE, Pin.A1)    # ANALOG_MODE or DIGITAL_MODE 方式
+heart_rate = HEARTRATE(ANALOG_MODE, Pin.A1)    # ANALOG_MODE or DIGITAL_MODE 方式
+# heart_rate = HEARTRATE(DIGITAL_MODE, Pin.A1)    # ANALOG_MODE or DIGITAL_MODE 方式
 
 while True:
   heart_rate.get_value()

@@ -8,7 +8,7 @@ from pinpong.libs.dfrobot_pn532 import PN532_UART
 
 Board("nezha").begin()
 
-nfc = PN532_UART("/dev/ttyS5")
+nfc = PN532_UART("/dev/ttyS3")
 
 while not nfc.begin():
   print("initial failure")

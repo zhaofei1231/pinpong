@@ -17,10 +17,10 @@ print("I2C LCD1602 TEST...")
 lcd.backlight(True)  #打开背光
 lcd.clear()   #清屏
 lcd.set_cursor(0,0)  #设置光标位置
-lcd.printf("Hello World") #显示 "Hello World",1602屏像素点少，不能显示汉字
+lcd.print("Hello World") #显示 "Hello World",1602屏像素点少，不能显示汉字
 
 lcd.set_cursor(1,1)  #设置光标位置
-lcd.printf(1234) #显示数字1234
+lcd.print(1234) #显示数字1234
 
 while True:
   pass

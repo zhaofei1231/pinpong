@@ -8,7 +8,7 @@ from pinpong.libs.dfrobot_pn532 import PN532_UART
 
 Board("nezha").begin()
 
-nfc = PN532_UART("/dev/ttyS5")
+nfc = PN532_UART("/dev/ttyS3")
 
 write_data = "NFC"
 #write_data = [1, 2, 3, 4, 5, 6, 7, 8, 9]

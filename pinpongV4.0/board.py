@@ -51,13 +51,14 @@ import pinpong.extension.micro
 import pinpong.extension.hand
 import pinpong.extension.leonardo
 import pinpong.extension.unihi
+import pinpong.extension.nezha
 
 class DuinoPin:
   def __init__(self, board=None, pin=None, mode=None):
     
     self.mode = mode
     self.board = board
-    self.pin, self.apin = board.res["get_pin"](pin)  #通过板子信息获取对应引脚
+    self.pin, self.apin = board.res["get_pin"](self,pin)  #通过板子信息获取对应引脚
     if(mode == Pin.OUT):
       self.board.board.set_pin_mode_digital_output(self.pin)
     elif(mode == Pin.IN):
@@ -213,7 +214,7 @@ class SYSFSPin:
     self.board = board
     if(pin == None):
       self.pin = None
-      return                  
+      return       
     self.pin = pin
     self.mode = mode
     self.export_path = '/sys/class/gpio/export'
@@ -303,9 +304,9 @@ class Pin(PinInformation):
       return
     self.pin = pin
     self.mode = mode
-
-    self.pin, self.apin = board.res["get_pin"](pin)
-    self.obj = eval(board.res["pin"]["class"]+"(board, pin, mode)") #根据板子对象直接调用对应的pin方法
+    self.pinnum = pin
+    self.pin, self.apin = board.res["get_pin"](self, pin)
+    self.obj = eval(board.res["pin"]["class"]+"(board, self.pinnum, mode)") #根据板子对象直接调用对应的pin方法
    
   def value(self, v = None):
     if v == None:  #Read                      
@@ -456,25 +457,19 @@ class RPiPWM:
 class SYSFSPWM:
   def __init__(self, board, pin_obj):
     self.pin_obj = pin_obj   
+    self.freq_value = 100
+    self.duty_value = 50
     self.period_ns = 10000000
-    if self.pin_obj.pin not in [7]:#PWM0-GPIO7
-      raise ValueError("invalid pin ",self.pin_obj.pin)
-    self.pwms={7:{"channel":0, "io":38}}
-    self.io = str(self.pwms[self.pin_obj.pin]["io"])
-    self.channel = str(self.pwms[self.pin_obj.pin]["channel"])
-    self.export_path = '/sys/class/pwm/pwmchip0/export'
-    self.period_path = '/sys/class/pwm/pwmchip0/pwm'+self.channel+'/period'
-    self.duty_path = '/sys/class/pwm/pwmchip0/pwm'+self.channel+'/duty_cycle'
-    self.enable_path = '/sys/class/pwm/pwmchip0/pwm'+self.channel+'/enable'
-
-    if len(board.res["pwm"]["GPIO"]) > 1:
-      if os.path.exists('/sys/class/gpio/gpio'+self.io):
-      #print('echo '+self.io+' > /sys/class/gpio/unexport')
-        os.system('echo '+self.io+' > /sys/class/gpio/unexport')
-    if not os.path.exists('/sys/class/pwm/pwmchip0/pwm'+self.channel):
-      #print('echo '+self.channel+' > '+self.export_path)
-      os.system('echo '+self.channel+' > '+self.export_path)
-    self.isStart = False
+    if self.pin_obj.pin not in board.res["pwm"]["pinpwm"]:#PWM1-GPIO22-PB6(P35,IO38) PWM7--GPIO3-PD22(P7, 118)
+      raise ValueError("PWM不支持该引脚%d"%self.pin_obj.pin, "支持", board.res["pwm"]["pinpwm"])
+    self.io = str(board.res["pin"]["pinnum"][self.pin_obj.pin])
+    self.channel = str(board.res["pwm"]["pwmconfig"][self.pin_obj.pin]["channel"])
+    self.export_path = board.res["pwm"]["export_path"]
+    self.pwm_path = board.res["pwm"]["comm_path"]
+    self.period_path = self.pwm_path+self.channel+'/period'
+    self.duty_path = self.pwm_path+self.channel+'/duty_cycle'
+    self.enable_path = self.pwm_path+self.channel+'/enable'
+    board.res["PWM"](self)
 
   def freq(self, v=None):
     if v == None:
@@ -482,17 +477,17 @@ class SYSFSPWM:
     else:
       if v == 0:
         #print('echo 0 > /sys/class/pwm/pwmchip0/pwm'+self.channel+'/enable')
-        os.system('echo 0 > /sys/class/pwm/pwmchip0/pwm'+self.channel+'/enable')
+        os.system('echo 0 > '+self.pwm_path+self.channel+'/enable')
         self.isStart = False
         return
       self.freq_value = v
       self.period_ns = int(1000000000/self.freq_value)
       #print('echo '+str(self.period_ns)+' > /sys/class/pwm/pwmchip0/pwm'+self.channel+'/period')
-      os.system('echo '+str(self.period_ns)+' > /sys/class/pwm/pwmchip0/pwm'+self.channel+'/period')
+      os.system('echo '+str(self.period_ns)+' > '+self.pwm_path+self.channel+'/period')
 
       if self.isStart == False:
         #print('echo 1 > /sys/class/pwm/pwmchip0/pwm'+self.channel+'/enable')
-        os.system('echo 1 > /sys/class/pwm/pwmchip0/pwm'+self.channel+'/enable')
+        os.system('echo 1 > '+self.pwm_path+self.channel+'/enable')
         self.isStart = True
 
   def duty(self, v=None):
@@ -505,11 +500,11 @@ class SYSFSPWM:
       os.system('echo '+str(duty_ns)+' > '+self.duty_path)
       if self.isStart == False:
         #print('echo 1 > /sys/class/pwm/pwmchip0/pwm'+self.channel+'/enable')
-        os.system('echo 1 > /sys/class/pwm/pwmchip0/pwm'+self.channel+'/enable')
+        os.system('echo 1 > '+self.pwm_path+self.channel+'/enable')
         self.isStart = True
 
   def deinit(self):
-    os.system('echo 0 > /sys/class/pwm/pwmchip0/pwm'+self.channel+'/enable')
+    os.system('echo 0 > '+self.pwm_path+self.channel+'/enable')
     self.isStart = False
 
 class PWM:
@@ -964,8 +959,7 @@ class EVENTIRRecv:
     if not pin_obj:
       raise ValueError("invalid Pin")
     
-    inputs = {"NEZHA":{20:"/dev/input/event1"}}
-    node= inputs[board.boardname][self.pin_obj.pin]
+    node= board.res["irrecv"]["event"][self.pin_obj.pin]
     #启动一个线程，执行select，发生事件后调用callback函数
     t = threading.Thread(target=self.work,args=(node, callback))
     t.start()
@@ -1044,7 +1038,7 @@ class IRRemote:
   def send(self, value):
     return self.obj.send(value)
 
-class RPiTone:
+class LinuxTone:
   def __init__(self, board, pin_obj):
     self.board = board
     self.pwm = PWM(pin_obj = pin_obj)
@@ -1308,7 +1302,7 @@ class Board:
   def __init__(self, boardname="", port=None):
     global gboard
     gboard = None
-    print("pinpong0.5.1")
+   
     self.boardname = boardname.upper()
     self.port = port
     self.connected = False
@@ -1321,10 +1315,11 @@ class Board:
   
     signal.signal(signal.SIGINT, self._exit_handler)
 
-    if platform.platform().find("rockchip") > 0:  ###############如果上面插了一个uno怎么办？
-      self.boardname = "UNIHIKER"####验收的时候讨论下这句话是否可以去掉
+    if platform.platform().find("rockchip") > 0:  
+      self.boardname = "UNIHIKER"
     
     find_board(self)
+    
     
     self.res = get_globalvar_value(self.boardname) #获取板子信息资源
     if self.res == None:
@@ -1338,10 +1333,10 @@ class Board:
 
   def begin(self):
 
+    self.res["begin"](self) #firmata烧录准备
+
     if self.connected: #Linux or Win SBC
       return self
-
-    self.res["begin"](self) #firmata烧录准备
     
     major,minor = self.detect_firmata()
     print("[32] Firmata ID: %d.%d"%(major,minor))

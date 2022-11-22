@@ -5,12 +5,12 @@
 import time
 from pinpong.board import Board,Pin,DS18B20
 
-Board("").begin()  #初始化，选择板型和端口号，不输入端口号则进行自动识别
+Board("handpy").begin()  #初始化，选择板型和端口号，不输入端口号则进行自动识别
 #Board("handpy","COM36").begin()  #windows下指定端口初始化
 #Board("handpy","/dev/ttyACM0").begin()   #linux下指定端口初始化
 #Board("handpy","/dev/cu.usbmodem14101").begin()   #mac下指定端口初始化
 
-ds18b20 = DS18B20(Pin(Pin.P0))
+ds18b20 = DS18B20(Pin(Pin.P1))
 
 while True:
   temp = ds18b20.temp_c()

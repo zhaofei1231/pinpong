@@ -16,6 +16,7 @@ husky = Huskylens()
 
 while True:
     data = husky.command_request()
+    # print(data)
     if (data):
         num_of_objects = int(len(data)/5)
         for i in range(num_of_objects):

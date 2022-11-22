@@ -6,7 +6,7 @@ import time
 from pinpong.board import Board
 from pinpong.libs.dfrobot_pn532 import PN532_I2C
 
-Board("").begin()  #初始化，选择板型和端口号，不输入端口号则进行自动识别
+Board("uno").begin()  #初始化，选择板型和端口号，不输入端口号则进行自动识别
 #Board("uno","COM36").begin()  #windows下指定端口初始化
 #Board("uno","/dev/ttyACM0").begin()   #linux下指定端口初始化
 #Board("uno","/dev/cu.usbmodem14101").begin()   #mac下指定端口初始化
@@ -15,7 +15,6 @@ nfc = PN532_I2C()
 
 def print_data(block):
   value = nfc.read_data(block)
-  print(value)
   if  value != None:
     for i in value:
       print("0x%x "%(i), end="")

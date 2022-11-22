@@ -9,7 +9,7 @@ from pinpong.libs.lcd1602 import LCD1602_I2C #从libs中导入lcd1602_i2c库
 Board("RPi").begin()  #初始化，选择板型和端口号，不输入端口号则进行自动识别
 #Board("uno","/dev/ttyACM0").begin()   #linux下指定端口初始化
 
-lcd = LCD1602_I2C(i2c_addr=0x20, bus_num=1) #初始化LCD的I2C地址
+lcd = LCD1602_I2C(i2c_addr=0x3e, bus_num=1) #初始化LCD的I2C地址
 
 print("I2C LCD1602 TEST...")
 

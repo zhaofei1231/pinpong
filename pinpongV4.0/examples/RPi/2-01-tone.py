@@ -7,7 +7,7 @@ import time
 from pinpong.board import Board,Pin,Tone
 
 Board("RPi").begin()
-tone = Tone(Pin(25)) #将Pin传入Tone中实现模拟输出
+tone = Tone(Pin(21)) #将Pin传入Tone中实现模拟输出
 tone.freq(0) #按照设置的频率播放
 
 while True:

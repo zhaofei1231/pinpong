@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-#SEN0482:·çÏò²âÁ¿,Ğè´îÅäRS485×ªUARTÄ£¿é(DFR0845)¡¢IIC×ª´®¿ÚÄ£¿é(DFR0627)Ê¹ÓÃ
+#SEN0482:é£å‘æµ‹é‡,éœ€æ­é…RS485è½¬UARTæ¨¡å—(DFR0845)ã€IICè½¬ä¸²å£æ¨¡å—(DFR0627)ä½¿ç”¨
 
 import time
 from pinpong.board import Board
 from pinpong.libs.rs485winddirection_rs485touart_uarttoi2c import IICSerialWindDirection
 
-Board("uno").begin()  #³õÊ¼»¯£¬Ñ¡Ôñ°åĞÍºÍ¶Ë¿ÚºÅ£¬²»ÊäÈë¶Ë¿ÚºÅÔò½øĞĞ×Ô¶¯Ê¶±ğ
+Board("UNIHIKER").begin()  #åˆå§‹åŒ–ï¼Œé€‰æ‹©æ¿å‹å’Œç«¯å£å·ï¼Œä¸è¾“å…¥ç«¯å£å·åˆ™è¿›è¡Œè‡ªåŠ¨è¯†åˆ«
 
-wx = IICSerialWindDirection(IICSerialWindDirection.SUBUART_CHANNEL_1, IA1 = 0, IA0 = 0)
+wx = IICSerialWindDirection(IICSerialWindDirection.SUBUART_CHANNEL_1, IA1 = 1, IA0 = 1)
 
 wx.modify_address(0, 2)
 
 while True:
     print(wx.read_wind_direction())
+    print(wx.get_wind_angle())          #V2æ‰æœ‰è¯»å–è§’åº¦
     time.sleep(0.3)

@@ -70,7 +70,6 @@ class I2CTrans(object):
         posix.close(self.fd)
     
     def read(self, msgs, read_byte):
-        print("newscaadasda")
         value = self.transfer(msgs)
         read_buf = []
         for i in range(read_byte):    #返回字节数组列表，进行数据处理

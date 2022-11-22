@@ -334,7 +334,7 @@ class DFRobot_MICS(object):
       return 1
 
 class DFRobot_MICS_I2C(DFRobot_MICS): 
-  def __init__(self, board=None, i2c_addr=0x75, bus_num=0):
+  def __init__(self, board=None, i2c_addr=0x73, bus_num=0):
     if isinstance(board, int):
       i2c_addr = board
       board = gboard

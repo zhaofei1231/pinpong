@@ -9,7 +9,7 @@ from pinpong.libs.dfrobot_ssd1306 import SSD1306_I2C #导入ssd1306库
 
 Board("nezha").begin()
 
-oled=SSD1306_I2C(width=128, height=64) #初始化屏幕，传入屏幕像素点数
+oled=SSD1306_I2C(width=128, height=64, bus_num=2) #初始化屏幕，传入屏幕像素点数
 
 while True:
   oled.fill(1) #全部填充显示

@@ -130,8 +130,10 @@ def differ_microbit():       #区分microbit V1 V2
         
 def begin(board):
     printlogo_big()
+    version = sys.version.split(' ')[0]
+    name = platform.platform()
+    print("[01] Python"+version+" "+name+(" " if board.boardname == "" else " Board: "+ board.boardname))
     val = differ_microbit()
-    print("mic = ", val)
     if val:
       mic_res["firmware"] = ["/base/FirmataExpress.MICROBITV2.", ".hex"]
     else:
@@ -155,7 +157,7 @@ def reset():
 def find_port(board):
   pass
  
-def get_pin(vpin):
+def get_pin(board,vpin):
   if vpin not in mic_res["pin"]["pinnum"]:
     raise ValueError("microbit不支持该引脚%d"%vpin, "支持引脚",mic_res["pin"]["pinnum"])
 

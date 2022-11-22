@@ -5,8 +5,8 @@
 import time
 from pinpong.board import Board,Pin,SR04_URM10
 
-TRIGER_PIN = Pin.D11
-ECHO_PIN = Pin.D12
+TRIGER_PIN = Pin.D7
+ECHO_PIN = Pin.D8
 
 Board("uno").begin()  #初始化，选择板型和端口号，不输入端口号则进行自动识别
 #Board("uno","COM36").begin()  #windows下指定端口初始化

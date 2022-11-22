@@ -14,15 +14,15 @@ MERGE: 像素点合并，例如0XF800(红色) 合并 0x07E0(绿色)，像素点�
 REPLACE：像素点取代，例如0XF800(红色) 取代 0x07E0(绿色)，像素点变为0xF800(红色)
 """
 
-lcd.blend_mode(lcd.MERGE)#lcd.REPLACE
+lcd.set_blend_mode(lcd.MERGE)#lcd.REPLACE
 
 '''
 font='msyh' 当前只支持微软雅黑字体
 size=30 表示中文字体宽度30像素，高度30像素，英文宽度15，高度30
 '''
-lcd.set_font(font="msyh", size=30)#width = 30, height = 20, kerning = 0, rowledge = 0)
+lcd.set_font(font="msyh", width = 30, height = 20, kerning = 0, rowledge = 0)
 
-#lcd.fill(lcd.COLOR_BLACK) #填充屏幕为黑色
+lcd.fill(lcd.COLOR_BLACK) #填充屏幕为黑色
 lcd.fill_rect(80,0,50,50,lcd.COLOR_GREEN)   #画实心矩形（x,y,w,h,c）
 lcd.fill_rect(100,0,50,50,lcd.COLOR_RED)    #画实心矩形
 lcd.rect(150,0,50,50,lcd.COLOR_GREEN)       #画空心矩形

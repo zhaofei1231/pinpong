@@ -9,7 +9,7 @@ from pinpong.libs.dfrobot_mlx90614 import MLX90614 #从libs导入mlx90614库
 
 Board("nezha").begin()
 
-irt=MLX90614()
+irt=MLX90614(bus_num=2)
 
 while True:
   print("Object  %s *C"% irt.obj_temp_c())     #读取物体温度 摄氏度（℃）

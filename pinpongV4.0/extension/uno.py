@@ -105,7 +105,7 @@ def open_serial(board):
 def find_port(board):
   pass
 
-def get_pin(vpin):
+def get_pin(board,vpin):
 
   dpin = vpin if vpin<20 else (vpin-100+14) if vpin >= 100 else -1
   apin = vpin-100 if vpin >= 100 else -1

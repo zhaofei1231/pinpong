@@ -6,7 +6,7 @@ from pinpong.board import Board,IRRemote,Pin
 
 Board("UNIHIKER").begin()  #初始化，选择板型，不输入板型则进行自动识别
 
-ir = IRRemote(Pin(Pin.P8))
+ir = IRRemote(Pin(Pin.P22))
 
 while True:
     ir.send(0xfd807f) #VOL+

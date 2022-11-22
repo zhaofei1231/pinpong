@@ -76,6 +76,9 @@ def init(board, boardname, port):
   
 def begin(board):
   printlogo()
+  version = sys.version.split(' ')[0]
+  name = platform.platform()
+  print("[01] Python"+version+" "+name+(" " if board.boardname == "" else " Board: "+ board.boardname))
   uni_res["firmware"] = ["/base/FirmataExpress.UNIHIKER.", ".bin"]
   board.port = "/dev/ttyS3"
 
@@ -98,7 +101,7 @@ def open_serial(board):
 def find_port(board):
   pass
 
-def get_pin(vpin):
+def get_pin(board,vpin):
   if vpin not in uni_res["pin"]["pinnum"]:
     raise ValueError("不支持该引脚%d"%vpin, "支持引脚", uni_res["pin"]["pinnum"])
 

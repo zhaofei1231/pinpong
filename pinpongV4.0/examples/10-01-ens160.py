@@ -19,8 +19,8 @@ ens160.set_temp_hum(25.0, 50.0) # temperature & humidity
 
 while True:
     print("-------------------------")
-    print("Sensor operating status : %d" %ens160.get_ens160_status())
-    print("Air quality index : %d" %ens160.get_AQI())
-    print("Concentration of total volatile organic compounds : %d ppb" %ens160.get_TVOC())
-    print("Carbon dioxide equivalent concentration : %d ppm" %ens160.get_ECO2())
+    print("Sensor operating status : %d" %ens160.get_status())
+    print("Air quality index : %d" %ens160.get_aqi())
+    print("Concentration of total volatile organic compounds : %d ppb" %ens160.get_tvoc())
+    print("Carbon dioxide equivalent concentration : %d ppm" %ens160.get_eco2())
     time.sleep(1)

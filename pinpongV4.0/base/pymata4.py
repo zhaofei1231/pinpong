@@ -83,7 +83,7 @@ class Pymata4(threading.Thread):
         # that they stop when the program is closed
 
         # create a thread to interpret received serial data
-        self.the_reporter_thread = threading.Thread(target=self._reporter)   #有没有必要
+        self.the_reporter_thread = threading.Thread(target=self._reporter)
         self.the_reporter_thread.daemon = True
 
         self.ip_address = ip_address
@@ -3093,7 +3093,10 @@ class Pymata4(threading.Thread):
                     dispatch_entry=self.report_dispatch.get(sysex_command)
 
                     # get a "pointer" to the method that will process this command
-                    method=dispatch_entry[0]
+                    try:
+                        method=dispatch_entry[0]
+                    except:
+                        break
 
                     # now get the rest of the data excluding the END_SYSEX byte
                     end_of_sysex=False
@@ -3138,22 +3141,23 @@ class Pymata4(threading.Thread):
                     # print("data = ",hex(data))
                     # print("dispatch_entry = ",dispatch_entry)
                     # this calls the method retrieved from the dispatch table
-                    method=dispatch_entry[0]
+                    try:
+                        method=dispatch_entry[0]
+                    
+                        # get the number of parameters that this command provides
+                        num_args=dispatch_entry[1]
 
-                    # get the number of parameters that this command provides
-                    num_args=dispatch_entry[1]
+                        # look at the number of args that the selected method requires
+                        # now get that number of bytes to pass to the called method
+                        for i in range(num_args):
+                            while len(self.the_deque) == 0:
+                                pass
+                            data=self.the_deque.popleft()
+                            response_data.append(data)
+                            # go execute the command with the argument list
 
-                    # look at the number of args that the selected method requires
-                    # now get that number of bytes to pass to the called method
-                    for i in range(num_args):
-                        while len(self.the_deque) == 0:
-                            pass
-                        data=self.the_deque.popleft()
-                        response_data.append(data)
-                        # go execute the command with the argument list
-
-                    method(response_data)
-
+                        method(response_data)
+                    except:pass
                     # go to the beginning of the loop to process the next command
                     continue
             else:

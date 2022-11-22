@@ -8,7 +8,7 @@ from pinpong.board import Board,Pin
 
 Board("RPi").begin()
 
-led = Pin(Pin.D29, Pin.OUT) #RPi引脚初始化为电平输出
+led = Pin(Pin.D21, Pin.OUT) #RPi引脚初始化为电平输出
 
 while True:
   led.value(1) #输出高电平

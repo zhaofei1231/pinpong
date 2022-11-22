@@ -12,7 +12,7 @@ def ir_recv3(data):
   print(hex(data))
 
 #ir2 = IRRecv(Pin(Pin.P0))
-ir3 = IRRecv(Pin(Pin.P12),ir_recv3)
+ir3 = IRRecv(Pin(Pin.P22),ir_recv3)
 
 while(1):
 #  v = ir2.read()

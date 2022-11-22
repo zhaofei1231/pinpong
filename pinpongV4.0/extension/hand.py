@@ -75,6 +75,9 @@ def init(board, boardname, port):
   
 def begin(board):
   printlogo_big()
+  version = sys.version.split(' ')[0]
+  name = platform.platform()
+  print("[01] Python"+version+" "+name+(" " if board.boardname == "" else " Board: "+ board.boardname))
   han_res["firmware"] = ["/base/FirmataExpress.HANDPY.", ".bin"]
 
 def open_serial(board):
@@ -95,7 +98,7 @@ def soft_reset(board):
 def find_port(board):
   pass
 
-def get_pin(vpin):
+def get_pin(board,vpin):
   if vpin not in han_res["pin"]["pinnum"]:
     raise ValueError("handpy不支持该引脚%d"%vpin, "支持引脚",han_res["pin"]["pinnum"])
   dpin = apin = vpin
